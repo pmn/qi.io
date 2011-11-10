@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}sign in{% endblock %}
+{% block content %}
+Sign in: 
+<form method="POST" class="form-stacked">
+  {{ form.csrf }}
+  {{ form.username.label }} {{ form.username(size=20) }}
+  {{ form.password.label }} {{ form.password }}
+  <br />
+  <input type="submit" value="Sign in" />
+</form>
+{% endblock %}

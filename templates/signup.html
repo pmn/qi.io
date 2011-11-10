@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}sign up{% endblock %}
+{% block content %}
+Sign up:
+<form method="POST" class="form-stacked">
+  {{ form.csrf }}
+  {{ form.username.label }} {{ form.username(size=20) }}
+  {% if form.username.errors %}
+  <ul class="errors">
+    {% for error in form.username.errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {{ form.password.label }} {{ form.password }}
+  {% if form.password.errors %}
+  <ul class="errors">
+    {% for error in form.password.errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {{ form.confirm.label }} {{ form.confirm }}
+  {% if form.confirm.errors %}
+  <ul class="errors">
+    {% for error in form.confirm.errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <br />
+  <input type="submit" value="Sign up" />
+</form>
+{% endblock %}

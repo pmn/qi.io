@@ -1,0 +1,37 @@
+<html>
+<head>
+<title>{% block title %}qi.io{% endblock %}</title>
+<link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+{% block header %}{% endblock %}
+</head>
+<body>
+<header>
+<div id="header">
+<h1><a href="/">qi.io</a></h1>
+</div>
+<div id="userbar">
+  <a href="{{ url_for('signin') }}">Sign in</a> or <a href="{{ url_for('signup') }}">Sign up</a>
+</div>
+</header>
+<div class="container">
+  <div class="messages">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert-message block-message warning">
+      <ul class="flashes">
+	{% for message in messages %}
+	<li>{{ message }}</li>
+	{% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+  <div class="content">
+    {% block content %}{% endblock %}
+  </div>
+</div>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>

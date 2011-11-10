@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}home{% endblock %}
+{% block content %}
+<form method="POST" action="{{ url_for('saveentry') }}" class="form-stacked">
+  {{ form.csrf }}
+  {{ form.title.label }} {{ form.title }}
+  {{ form.body.label }} {{ form.body }}
+  <br />
+  <input type="submit" value="Save" />
+</form>
+{% endblock %}
