@@ -30,6 +30,15 @@ Sign up:
     {% endfor %}
   </ul>
   {% endif %}
+
+  {{ form.invitation_code.label }} {{ form.invitation_code }}
+  {% if form.invitation_code.errors %}
+  <ul class="errors">
+    {% for error in form.invitation_code.errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
   <br />
   <input type="submit" value="Sign up" />
 </form>

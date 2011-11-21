@@ -10,7 +10,11 @@
 <h1><a href="/">qi.io</a></h1>
 </div>
 <div id="userbar">
+  {% if user == None %}
   <a href="{{ url_for('signin') }}">Sign in</a> or <a href="{{ url_for('signup') }}">Sign up</a>
+  {% else %}
+  Signed in as {{ user['username'] }} [<a href="{{ url_for('signout') }}">Sign out</a>]
+  {% endif %}
 </div>
 </header>
 <div class="container">

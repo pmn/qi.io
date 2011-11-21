@@ -3,8 +3,14 @@
 {% block content %}
 <form method="POST" action="{{ url_for('saveentry') }}" class="form-stacked">
   {{ form.csrf }}
-  {{ form.title.label }} {{ form.title }}
-  {{ form.body.label }} {{ form.body }}
+  {% for entry in entries %}
+  {{ entry.created_at }}
+  <hr>
+  {{ entry.raw_body }}
+  <br>
+  {% endfor %}
+  {{ form.body(rows=10, columns=80, class="xxlarge") }}
+  {{ form.entry_id }}
   <br />
   <input type="submit" value="Save" />
 </form>
