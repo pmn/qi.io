@@ -11,64 +11,37 @@
       <h3><a href="/">qi.io</a></h3>
       <ul class="nav secondary-nav">
 	<li>
-	  {% if user == None %}
-      <a href="{{ url_for('signin') }}">Sign in</a> or <a href="{{ url_for('signup') }}">Sign up</a>
-      {% else %}
-      <a href="#">{{ user['username'] }}</a>
-      {% endif %}
-      </li>
+	  {% if user != None %}
+	  <a href="#">{{ user['username'] }}</a>
+	  {% endif %}
+	</li>
       </ul>
     </div>
   </div>
 </div>
-
 
 <div class="container-fluid">
   <div class="sidebar">
-    <div>
-      <h4>todo</h4>
-      <ul class="unstyled">
-	<li><input type="checkbox">Bring books to BGA</li>
-	<li><input type="checkbox">Punchfork work on Thursday</li>
-      </ul>
-    </div>
-    <div>
-      <h4>notes</h4>
-      <textarea class="large"></textarea>
-    </div>
-    <div>
-      <h4>dates</h4>
-      <ul>
-	<li>2011-11-25: Thanksgiving</li>
-	<li>2011-12-24: Birthday</li>
-	<li>2011-12-25: Christmas</li>
-      </ul>
-    </div>
+    {% block sidebar %}{% endblock %}
   </div>
 
-
-  
-  <div class="messages">
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div class="alert-message block-message warning">
-      <ul class="flashes">
-	{% for message in messages %}
-	<li>{{ message }}</li>
-	{% endfor %}
-      </ul>
-    </div>
-    {% endif %}
-    {% endwith %}
-  </div>
   <div class="content">
+    <div class="messages">
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <div class="alert-message block-message warning">
+	<ul class="flashes">
+	  {% for message in messages %}
+	  <li>{{ message }}</li>
+	  {% endfor %}
+	</ul>
+      </div>
+      {% endif %}
+      {% endwith %}
+    </div>
     {% block content %}{% endblock %}
   </div>
-
-
-
 </div>
-
 
 {% block scripts %}{% endblock %}
 </body>

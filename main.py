@@ -4,6 +4,7 @@ from forms import EntryForm, SigninForm, SignupForm
 import logging
 
 import bcrypt
+from datetime import datetime
 
 import settings
 import db_api
@@ -21,8 +22,12 @@ def home():
     if user:
         entries = user.entries()
         current_entry = user.current_entry()
-        if current_entry:
-            form.body.data = current_entry['raw_body']
+        if current_entry == None and user != None:
+            current_entry = Entry('', user.username)
+
+        if current_entry != None:
+            form = EntryForm(entry_id=current_entry.id,
+                             body=current_entry.raw_body)
     else:
         entries = []
         current_entry = None
@@ -31,7 +36,8 @@ def home():
                            form=form,
                            user=user,
                            entries=entries,
-                           current_entry=current_entry)
+                           current_entry=current_entry,
+                           current_date=datetime.now())
 
 
 @app.route("/save", methods=['POST'])
@@ -43,9 +49,22 @@ def saveentry():
         entry_id = request.form['entry_id']
         raw_body = request.form['body']
         entry = Entry(raw_body, user.username, entry_id)
-        db.save_entry(entry)
+        entry.save()
         logging.info("Saving entry with id {} for user {}".format(entry_id, user.username))
     return redirect(url_for('home'))
+
+
+@app.route("/newentry", methods=['GET','POST'])
+def newentry():
+    """Create a new entry"""
+    user = session['user']
+    newentry = Entry(None, user.username)
+    db.save_entry(newentry)
+    logging.info("Creating a new entry with id {} for user {}".format(newentry.id, user.username))
+    if request.method == 'GET':
+        return redirect(url_for('home'))
+    else:
+        return newentry
 
 
 @app.route("/signin", methods=['GET', 'POST'])

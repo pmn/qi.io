@@ -1,5 +1,7 @@
 from datetime import datetime
+
 import db_api
+import utils
 
 db = db_api.QiDB()
 
@@ -20,7 +22,17 @@ class User(object):
         return db.get_entries_for_user(self.username)
 
     def current_entry(self):
-        return db.get_current_entry_for_user(self.username)
+        record = db.get_current_entry_for_user(self.username)
+        if record:
+            entry = Entry(raw_body=record['raw_body'],
+                          created_by=record['created_by'],
+                          id=record['id'],
+                          tags=record['tags'],
+                          created_at=record['created_at'])
+        else:
+            entry = Entry('',self.username)
+                      
+        return entry
 
 
 class Entry(object):
@@ -30,7 +42,12 @@ class Entry(object):
         self.created_by = created_by
         
         if id == None:
-            self.id = datetime.now().strftime("%Y%m%d.01")
+            # ids depend on pre-existing ids. 
+            current_entry = db.get_current_entry_for_user(created_by)
+            if current_entry == None:
+                self.id = utils.nextid()
+            else:
+                self.id = utils.nextid(current_entry['id'])
         else:
             self.id = id
  
@@ -41,3 +58,7 @@ class Entry(object):
 
     def __repr__(self):
         return "<Entry {} created by {}>".format(self.id, self.created_by)
+
+    def save(self):
+        """Save the entry in the db"""
+        return db.save_entry(self)
