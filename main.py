@@ -71,7 +71,7 @@ def newentry():
 def signin():
     """Sign the user in"""
     form = SigninForm()
-    user = session.get('user')
+    user = None
     if request.method == 'POST' and form.validate():
         # Log the user in
         username = request.form['username']
@@ -85,7 +85,7 @@ def signin():
         else:
             flash("Incorrect username or password")
             logging.info("Incorrect username or password for user: {}".format(username))
-            return render_template("signin.html", form=form)
+            return render_template("signin.html", form=form, user=user)
     return render_template("signin.html", 
                            form=form,
                            user=user)
