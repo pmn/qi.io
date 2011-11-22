@@ -5,19 +5,23 @@
 {% block header %}{% endblock %}
 </head>
 <body>
-<header>
-<div id="header">
-<h1><a href="/">qi.io</a></h1>
-</div>
-<div id="userbar">
-  {% if user == None %}
-  <a href="{{ url_for('signin') }}">Sign in</a> or <a href="{{ url_for('signup') }}">Sign up</a>
-  {% else %}
-  Signed in as {{ user['username'] }} [<a href="{{ url_for('signout') }}">Sign out</a>]
-  {% endif %}
-</div>
-</header>
 <div class="container">
+  <header>
+    <div class="row">
+      <div id="header" class="span4">
+	<h1><a href="/">qi.io</a></h1>
+      </div>
+      <div id="userbar" class="span4 offset8">
+	{% if user == None %}
+	<a href="{{ url_for('signin') }}">Sign in</a> or <a href="{{ url_for('signup') }}">Sign up</a>
+	{% else %}
+	Signed in as {{ user['username'] }} [<a href="{{ url_for('signout') }}">Sign out</a>]
+	{% endif %}
+      </div>
+    </div>
+    
+  </header>
+  
   <div class="messages">
     {% with messages = get_flashed_messages() %}
     {% if messages %}

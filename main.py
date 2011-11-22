@@ -20,13 +20,19 @@ def home():
     user = session.get('user')
     if user:
         entries = user.entries()
+        current_entry = user.current_entry()
+        if current_entry:
+            form.body.data = current_entry['raw_body']
     else:
-        entries = None
+        entries = []
+        current_entry = None
 
     return render_template("index.html",
                            form=form,
                            user=user,
-                           entries=entries)
+                           entries=entries,
+                           current_entry=current_entry)
+
 
 @app.route("/save", methods=['POST'])
 def saveentry():
@@ -38,9 +44,10 @@ def saveentry():
         raw_body = request.form['body']
         entry = Entry(raw_body, user.username, entry_id)
         db.save_entry(entry)
-        print "Saving entry with id {} for user {}".format(entry_id, user.username)
+        logging.info("Saving entry with id {} for user {}".format(entry_id, user.username))
     return redirect(url_for('home'))
-    
+
+
 @app.route("/signin", methods=['GET', 'POST'])
 def signin():
     """Sign the user in"""
@@ -64,6 +71,7 @@ def signin():
                            form=form,
                            user=user)
 
+
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
     """Register a user"""
@@ -85,10 +93,12 @@ def signup():
                            form=form,
                            user=user)
 
+
 @app.route("/signout")
 def signout():
     session.pop('user')
     return redirect(url_for('home'))
+
 
 app.secret_key = settings.APP_SECRET_KEY
 

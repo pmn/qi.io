@@ -1,17 +1,25 @@
 {% extends "base.html" %}
 {% block title %}home{% endblock %}
 {% block content %}
+{% if user != None %}
 <form method="POST" action="{{ url_for('saveentry') }}" class="form-stacked">
   {{ form.csrf }}
   {% for entry in entries %}
-  {{ entry.created_at }}
-  <hr>
+  <h6>{{ entry.created_at.strftime("%Y-%m-%d") }}</h6>
+  <pre>
   {{ entry.raw_body }}
-  <br>
+  </pre>
+  <hr>
   {% endfor %}
-  {{ form.body(rows=10, columns=80, class="xxlarge") }}
+
+  {{ form.body(rows=7, columns=80, class="xxlarge") }}
   {{ form.entry_id }}
   <br />
-  <input type="submit" value="Save" />
+  <input type="submit" class="btn" value="Save" />
+  <button class="btn">New</button>
 </form>
+{% else %}
+<h1>Currently in closed beta, please come back another time.</h1>
+<h4>Have an invite? Sign up <a href="{{ url_for('signup') }}">HERE</a></h4>
+{% endif %}
 {% endblock %}

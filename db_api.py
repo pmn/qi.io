@@ -24,8 +24,13 @@ class QiDB(object):
     def get_current_entry_for_user(self, username):
         """Get the user's current entry"""
         logging.debug('Fetching current entry for user: {}'.format(username))
-        return self.db.entries.find({'created_by': username,
-                                     'current': true})
+        current_entry = self.db.entries.find({'created_by': username}
+                                             ).sort('created_at', pymongo.DESCENDING).limit(1)
+        if current_entry:
+            # There should only be one current entry.
+            return current_entry[0]
+        else:
+            return None
 
     def save_entry(self, entry):
         """Save an entry into the database"""
