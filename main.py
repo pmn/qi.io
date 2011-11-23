@@ -114,7 +114,13 @@ def signup():
 
         db.save_user(user)
 
+        # Log the user in
+        user = User(username, email='')
+        session['user'] = user
+
         logging.info("User created: {}".format(username))
+
+        flash("Successfully registered. Welcome, {}!".format(username))
         return redirect(url_for('home'))
     return render_template("signup.html",
                            form=form,
