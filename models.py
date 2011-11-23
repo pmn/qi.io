@@ -30,7 +30,7 @@ class User(object):
                           tags=record['tags'],
                           created_at=record['created_at'])
         else:
-            entry = Entry('',self.username)
+            entry = None
                       
         return entry
 

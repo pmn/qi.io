@@ -8,6 +8,7 @@ from datetime import datetime
 
 import settings
 import db_api
+import utils
 from models import User, Entry
 
 app = Flask(__name__)
@@ -17,17 +18,18 @@ db = db_api.QiDB()
 @app.route("/")
 def home():
     """Display the home page"""
+    today_id = datetime.now().strftime('%Y%m%d')
     form = EntryForm()
     user = session.get('user')
     if user:
         entries = user.entries()
         current_entry = user.current_entry()
-        if current_entry == None and user != None:
-            current_entry = Entry('', user.username)
-
-        if current_entry != None:
+             
+        if current_entry != None and current_entry.id.startswith(today_id):
             form = EntryForm(entry_id=current_entry.id,
                              body=current_entry.raw_body)
+        else:
+            current_entry = Entry('', user.username)
     else:
         entries = []
         current_entry = None
@@ -58,7 +60,13 @@ def saveentry():
 def newentry():
     """Create a new entry"""
     user = session['user']
-    newentry = Entry(None, user.username)
+
+    current_entry = user.current_entry()
+    if current_entry:
+        newentry = Entry('', user.username, id=utils.nextid(current_entry.id))
+    else:
+        newentry = Entry('', user.username)
+ 
     db.save_entry(newentry)
     logging.info("Creating a new entry with id {} for user {}".format(newentry.id, user.username))
     if request.method == 'GET':

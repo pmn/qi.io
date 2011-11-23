@@ -3,7 +3,7 @@ from decimal import Decimal
 import unittest
 
 
-def nextid( start_id=None):
+def nextid(start_id=None):
     """Generate a valid new id."""
     test_id = datetime.now().strftime("%Y%m%d")
     if start_id == None:
@@ -25,7 +25,6 @@ class TextNextid(unittest.TestCase):
             ('20111101.01', test_id),
             )
         for testdate, result in test_cases:
-            print "comparing {} and {}".format(nextid(testdate), result)
             self.assertTrue(str(nextid(testdate)) == result)
 
 

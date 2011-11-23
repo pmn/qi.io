@@ -19,15 +19,14 @@ class QiDB(object):
     def get_entries_for_user(self, username):
         """Get all the entries for a specific user"""
         logging.debug('Fetching entries for user: {}'.format(username))
-        return self.db.entries.find({'created_by': username}).sort('id', pymongo.DESCENDING)
+        return self.db.entries.find({'created_by': username}).sort('id', pymongo.ASCENDING)
 
     def get_current_entry_for_user(self, username):
         """Get the user's current entry"""
         logging.debug('Fetching current entry for user: {}'.format(username))
         current_entry = self.db.entries.find({'created_by': username}
-                                             ).sort('id', pymongo.ASCENDING).limit(1)
+                                             ).sort('id', pymongo.DESCENDING).limit(1)
         if current_entry and current_entry.count() > 0:
-            # There should only be one current entry.
             return current_entry[0]
         else:
             return None
