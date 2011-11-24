@@ -22,6 +22,7 @@ class User(object):
         return db.get_entries_for_user(self.username)
 
     def current_entry(self):
+        """Return the most current entry for the user"""
         record = db.get_current_entry_for_user(self.username)
         if record:
             entry = Entry(raw_body=record['raw_body'],
@@ -31,8 +32,11 @@ class User(object):
                           created_at=record['created_at'])
         else:
             entry = None
-                      
         return entry
+
+    def scratchpad(self):
+        """Return the user's scratchpad"""
+        return db.get_scratchpad_for_user(self.username)
 
 
 class Entry(object):

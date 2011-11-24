@@ -13,8 +13,11 @@
   </ul>
 </div>
 <div>
-  <h4>scratchpad</h4>
-  <textarea class="large"></textarea>
+  <form method="POST" action="{{ url_for('savescratchpad') }}" class="form-stacked">
+    {{ scratchpadform.scratchpad.label }}
+    {{ scratchpadform.scratchpad }}
+    
+  </form>
 </div>
 <div>
   <h4>dates</h4>
@@ -37,10 +40,11 @@
   {{ form.csrf }}
 
   {% for entry in entries %}
-  <div id="id_{{ entry.id }}">
-    <h6>{{ entry.created_at.strftime("%Y-%m-%d") }}</h6>
-    <pre>{{ entry.raw_body }}</pre>
-  </div>
+  <div id="id_{{ entry.id }}" class="entrybox span10"><span class="entrydate">{{ entry.created_at.strftime("%Y-%m-%d") }}</span>
+    <pre>
+    <div class="edit_area" contenteditable="true" id="{{ entry.id }}">{{ entry.raw_body }}</div>
+    </pre>
+    </div>
   {% endfor %}
 
   <label for="body">{{ current_date.strftime("%Y-%m-%d") }}</label><br>

@@ -46,6 +46,11 @@ class QiDB(object):
                                upsert=True)
 
 
+    def get_scratchpad_for_user(self, username):
+        """Get the user's scratchpad"""
+        logging.debug('Fetching scratchpad for user: {}'.format(username))
+        return db.entries.find_one({'username': username})
+        
 
     def get_user(self, username):
         """Fetch a user record"""

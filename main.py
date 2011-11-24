@@ -1,6 +1,6 @@
 # qi: smart notes
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from forms import EntryForm, SigninForm, SignupForm
+from forms import EntryForm, SigninForm, SignupForm, ScratchpadForm
 import logging
 
 import bcrypt
@@ -20,6 +20,7 @@ def home():
     """Display the home page"""
     today_id = datetime.now().strftime('%Y%m%d')
     form = EntryForm()
+    scratchpadform = ScratchpadForm()
     user = session.get('user')
     if user:
         entries = user.entries()
@@ -36,15 +37,24 @@ def home():
 
     return render_template("index.html",
                            form=form,
+                           scratchpadform=scratchpadform,
                            user=user,
                            entries=entries,
                            current_entry=current_entry,
                            current_date=datetime.now())
 
 
+@app.route("/savescratchpad", methods=['POST'])
+def savescratchpad():
+    """Save the user's scratchpad"""
+    user = session['user']
+    scratchpad = request.form['scratchpad']
+    return "ok"
+
 @app.route("/save", methods=['POST'])
 def saveentry():
     """Save the entry"""
+    print "saveentry called"
     form = EntryForm()
     if request.method == 'POST' and form.validate():
         user = session['user']
