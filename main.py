@@ -51,12 +51,22 @@ def savescratchpad():
     scratchpad = request.form['scratchpad']
     return "ok"
 
+
 @app.route("/save", methods=['POST'])
 def saveentry():
+    """Save the entry (ajax)"""
+    user = session['user']
+    entry_id = request.form['entry_id']
+    raw_body = request.form['raw_body']
+    entry = Entry(raw_body, user.username, entry_id)
+    entry.save()
+    logging.info("Saving entry with id {} for user {}".format(entry_id, user.username))
+    return "ok"
+
+@app.route("/save2", methods=['POST'])
+def saveentry2():
     """Save the entry"""
-    print "saveentry called"
-    form = EntryForm()
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST':
         user = session['user']
         entry_id = request.form['entry_id']
         raw_body = request.form['body']
