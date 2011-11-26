@@ -1,10 +1,11 @@
 {% extends "base.html" %}
-{% block title %}home{% endblock %}
+{% block title %}qi.io{% endblock %}
 
 
 {% block sidebar %}
 {% if user != None %}
 <h6>data</h6>
+<!--
 <div>
   <h4>todo</h4>
   <ul class="unstyled">
@@ -12,13 +13,12 @@
     <li><input type="checkbox"> Punchfork work on Thursday</li>
   </ul>
 </div>
+//-->
 <div>
-  <form method="POST" action="{{ url_for('savescratchpad') }}" class="form-stacked">
-    {{ scratchpadform.scratchpad.label }}
-    {{ scratchpadform.scratchpad }}
-    
-  </form>
+  <h4>scratchpad</h4>
+  <div id="scratchpad" contenteditable="true" class="editbox">{{ scratchpad.raw_body|safe }}</div>
 </div>
+<!--
 <div>
   <h4>dates</h4>
   <ul>
@@ -27,8 +27,10 @@
     <li>2011-12-25: Christmas</li>
   </ul>
 </div>
+//-->
 <div>
   <h6>notifications</h6>
+  <div id="notifications"></div>
 </div>
 {% endif %}
 {% endblock %}
@@ -36,27 +38,24 @@
 
 {% block content %}
 {% if user != None %}
-<form method="POST" action="{{ url_for('saveentry') }}" class="form-stacked">
-  {{ form.csrf }}
+<div class="row">
+  <div class="span3"><h3>today:</h3></div>
+  <div class="span4 offset6" nowrap>
+    <a href="/newentry" class="btn small">new entry</a> <a href="#" class="btn small primary">save changes</a>
+  </div>
+</div>
 
-  {% for entry in entries %}
-  <div id="id_{{ entry.id }}" class="entrybox span10"><span class="entrydate">{{ entry.created_at.strftime("%Y-%m-%d") }}</span>
-    <pre>
-    <div class="edit_area" contenteditable="true" id="{{ entry.id }}">{{ entry.raw_body }}</div>
-    </pre>
-    </div>
-  {% endfor %}
+<div id="{{ current_entry.id }}" class="editbox" contenteditable="true">{{ current_entry.raw_body|safe }}</div>
+<hr>
+{% for entry in entries %}
+{% if entry.id != current_entry.id %}
+<span class="entrydate">{{ entry.created_at.strftime("%Y-%m-%d") }}</span>
+<div class="editbox" contenteditable="true" id="{{ entry.id }}">{{ entry.raw_body|safe }}</div>
+{% endif %}
+{% endfor %}
 
-  <label for="body">{{ current_date.strftime("%Y-%m-%d") }}</label><br>
-  {{ form.body(rows=7, columns=80, class="xxlarge") }}
-  {{ form.entry_id }}
-  <br />
-  <input type="submit" class="btn" value="Save" />
-  <a href="/newentry" class="btn">New</a>
-
-</form>
 {% else %}
-<h1>Currently in closed beta, please come back another time.</h1>
+<h2>Currently in closed beta, please come back another time.</h1>
 <h3>
   <a href="{{ url_for('signin') }}">Sign in</a> or <a href="{{ url_for('signup') }}">Sign up</a>
 </h3>

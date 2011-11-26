@@ -11,20 +11,24 @@ class QiDB(object):
         self.db = MONGODB_CONNECTION[db_name]
         logging.debug('Connected to database: {}'.format(db_name))
 
-    def get_entry(self, entryid):
+    def get_entry(self, entryid, created_by):
         """Get a single entry from the database"""
         logging.debug('Fetching entry: {}'.format(entryid))
-        return self.db.entries.find_one({"id": entryid})
+        return self.db.entries.find_one({'id': entryid,
+                                         'created_by': created_by})
 
     def get_entries_for_user(self, username):
         """Get all the entries for a specific user"""
         logging.debug('Fetching entries for user: {}'.format(username))
-        return self.db.entries.find({'created_by': username}).sort('id', pymongo.ASCENDING)
+        return self.db.entries.find({'created_by': username,
+                                     'id': {'$ne': 'scratchpad'}
+                                     }).sort('id', pymongo.DESCENDING)
 
     def get_current_entry_for_user(self, username):
         """Get the user's current entry"""
         logging.debug('Fetching current entry for user: {}'.format(username))
-        current_entry = self.db.entries.find({'created_by': username}
+        current_entry = self.db.entries.find({'created_by': username,
+                                              'id': {'$ne': 'scratchpad'}}
                                              ).sort('id', pymongo.DESCENDING).limit(1)
         if current_entry and current_entry.count() > 0:
             return current_entry[0]
@@ -49,7 +53,8 @@ class QiDB(object):
     def get_scratchpad_for_user(self, username):
         """Get the user's scratchpad"""
         logging.debug('Fetching scratchpad for user: {}'.format(username))
-        return db.entries.find_one({'username': username})
+        return self.db.entries.find_one({'id': 'scratchpad',
+                                    'created_by': username})
         
 
     def get_user(self, username):

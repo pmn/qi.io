@@ -1,7 +1,8 @@
 # qi: smart notes
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from forms import EntryForm, SigninForm, SignupForm, ScratchpadForm
+from forms import SigninForm, SignupForm
 import logging
+import argparse
 
 import bcrypt
 from datetime import datetime
@@ -19,37 +20,22 @@ db = db_api.QiDB()
 def home():
     """Display the home page"""
     today_id = datetime.now().strftime('%Y%m%d')
-    form = EntryForm()
-    scratchpadform = ScratchpadForm()
     user = session.get('user')
     if user:
         entries = user.entries()
         current_entry = user.current_entry()
-             
-        if current_entry != None and current_entry.id.startswith(today_id):
-            form = EntryForm(entry_id=current_entry.id,
-                             body=current_entry.raw_body)
-        else:
-            current_entry = Entry('', user.username)
+        scratchpad = user.scratchpad()
     else:
         entries = []
+        scratchpad = None
         current_entry = None
 
     return render_template("index.html",
-                           form=form,
-                           scratchpadform=scratchpadform,
+                           scratchpad=scratchpad,
                            user=user,
                            entries=entries,
                            current_entry=current_entry,
                            current_date=datetime.now())
-
-
-@app.route("/savescratchpad", methods=['POST'])
-def savescratchpad():
-    """Save the user's scratchpad"""
-    user = session['user']
-    scratchpad = request.form['scratchpad']
-    return "ok"
 
 
 @app.route("/save", methods=['POST'])
@@ -57,23 +43,19 @@ def saveentry():
     """Save the entry (ajax)"""
     user = session['user']
     entry_id = request.form['entry_id']
+
+    entry_record = db.get_entry(entry_id, user.username)
+    created_at = None
+    tags = []
+    if entry_record:
+        created_at = entry_record['created_at']
+        tags = entry_record['tags']
+
     raw_body = request.form['raw_body']
-    entry = Entry(raw_body, user.username, entry_id)
+    entry = Entry(raw_body, user.username, entry_id, tags, created_at)
     entry.save()
     logging.info("Saving entry with id {} for user {}".format(entry_id, user.username))
     return "ok"
-
-@app.route("/save2", methods=['POST'])
-def saveentry2():
-    """Save the entry"""
-    if request.method == 'POST':
-        user = session['user']
-        entry_id = request.form['entry_id']
-        raw_body = request.form['body']
-        entry = Entry(raw_body, user.username, entry_id)
-        entry.save()
-        logging.info("Saving entry with id {} for user {}".format(entry_id, user.username))
-    return redirect(url_for('home'))
 
 
 @app.route("/newentry", methods=['GET','POST'])
@@ -153,9 +135,48 @@ def signout():
     return redirect(url_for('home'))
 
 
+def init_logging(args):
+    log_level = logging.INFO
+    log_format = '%(asctime)s %(levelname)s: %(message)s'
+    formatter = logging.Formatter(log_format)
+
+    handlers = []
+
+    # Console handler.  By default, the console receives all log
+    # messages.  If the user is logging to a file, then the console
+    # will only receive warnings and errors.
+    console = logging.StreamHandler()
+    console.setLevel(logging.WARN if getattr(args, 'logfile', False) else log_level)
+    console.setFormatter(formatter)
+    handlers.append(console)
+
+    # File handler.  Optional.  If used, the file will receive all log
+    # messages.
+    if getattr(args, 'logfile', False):
+        filehandler = logging.FileHandler(args.logfile, 'a')
+        filehandler.setFormatter(formatter)
+        filehandler.setLevel(log_level)
+        handlers.append(filehandler)
+
+    # Attach all active log handlers.
+    logger = logging.getLogger()
+    logger.setLevel(log_level)
+    for old_handler in logger.handlers:
+        logger.removeHandler(old_handler)
+    for new_handler in handlers:
+        logger.addHandler(new_handler)
+
+
 app.secret_key = settings.APP_SECRET_KEY
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--logfile', metavar='FILE', help='Send all log messages to a file. ' +
+                                                          'Console will only display warnings & errors.')
+    parser.add_argument('--debug', action='store_true', default=False, help='Turn on debug log messages.')
+    args = parser.parse_args()
+
+    init_logging(args)
     app.run(port=settings.APP_PORT, 
             debug=settings.APP_DEBUG_ENABLED, 
             use_reloader=settings.APP_RELOADER_ENABLED)

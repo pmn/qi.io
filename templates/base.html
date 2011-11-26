@@ -6,15 +6,23 @@
 {% block header %}{% endblock %}
 </head>
 <body style="padding-top: 40px;">
-<div class="topbar">
-  <div id="header" class="topbar-inner">
+<div class="topbar" data-dropdown="dropdown">
+  <div class="topbar-inner">
     <div class="container">
       <h3><a href="/">qi.io</a></h3>
       <ul class="nav secondary-nav">
-	<li>
+	<li class="dropdown">
 	  {% if user != None %}
-	  <a href="#">{{ user['username'] }}</a>
+	  <a href="#" class="dropdown-toggle">{{ user['username'] }}</a>
 	  {% endif %}
+	  <ul class="dropdown-menu">
+	    <li>
+	      <a href="#">Settings</a>
+	    </li>
+	    <li>
+	      <a href="/signout">Sign out</a>
+	    </li>
+	  </ul>
 	</li>
       </ul>
     </div>
@@ -31,9 +39,9 @@
       {% with messages = get_flashed_messages() %}
       {% if messages %}
       <div class="alert-message block-message warning">
-	<ul class="flashes">
+	<ul class="flashes unstyled">
 	  {% for message in messages %}
-	  <li>{{ message }}</li>
+	  <li data-alert="alert">{{ message }}</li>
 	  {% endfor %}
 	</ul>
       </div>
@@ -45,6 +53,8 @@
 </div>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/site.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-dropdown.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-alerts.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/g.js') }}"></script>
 {% block scripts %}{% endblock %}
 </body>
