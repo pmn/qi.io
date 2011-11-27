@@ -176,7 +176,7 @@ if __name__ == '__main__':
     parser.add_argument('--debug', action='store_true', default=False, help='Turn on debug log messages.')
     args = parser.parse_args()
 
-    init_logging(args)
+    #init_logging(args)
     app.run(port=settings.APP_PORT, 
             debug=settings.APP_DEBUG_ENABLED, 
             use_reloader=settings.APP_RELOADER_ENABLED)
