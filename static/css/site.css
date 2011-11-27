@@ -23,3 +23,23 @@ div.editbox:hover {
 div.editbox:focus {
     background-color: #F8F9BB;
 }
+
+div.container-fluid {
+    min-height: 100%;
+}
+
+div.sidebar {
+    background-color: #F9F9F9;
+    border-left: solid 1px #F5F5F5;
+    border-right: solid 1px #F5F5F5;
+    margin-right: 2px;
+    min-height: 100%;
+    height: 100%;
+}
+
+span.notice {
+    display: block;
+    padding-left: 2em;
+    background-color: #EEDC94;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+}
