@@ -106,9 +106,18 @@ def signup():
     """Register a user"""
     form = SignupForm()
     user = session.get('user')
+
     if request.method == 'POST' and form.validate():
         # Add the user
         username = request.form['username']
+        existing_user = db.get_user(username)
+
+        if existing_user:
+            flash("This username has already been reserved, please choose another")
+            return render_template("signup.html",
+                                   form=form,
+                                   user=user)
+
         password = bcrypt.hashpw(request.form['password'], 
                                  bcrypt.gensalt(settings.BCRYPT_WORK_FACTOR))
         invitation_code = request.form['invitation_code']
@@ -176,7 +185,7 @@ if __name__ == '__main__':
     parser.add_argument('--debug', action='store_true', default=False, help='Turn on debug log messages.')
     args = parser.parse_args()
 
-    #init_logging(args)
+    init_logging(args)
     app.run(port=settings.APP_PORT, 
             debug=settings.APP_DEBUG_ENABLED, 
             use_reloader=settings.APP_RELOADER_ENABLED)
