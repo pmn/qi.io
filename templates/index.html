@@ -37,6 +37,8 @@
 
 {% block content %}
 {% if user != None %}
+<div class="row">
+<div class="span11">
 <h3>today:</h3>
 <div id="{{ current_entry.id }}" class="editbox" contenteditable="true">{{ current_entry.raw_body|safe }}</div>
 <hr>
@@ -46,7 +48,8 @@
 <div class="editbox" contenteditable="true" id="{{ entry.id }}">{{ entry.raw_body|safe }}</div>
 {% endif %}
 {% endfor %}
-
+</div>
+</div>
 {% else %}
 <h2>Currently in closed beta, please come back another time.</h1>
 <h3>
