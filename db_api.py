@@ -8,7 +8,7 @@ MONGODB_CONNECTION = pymongo.connection.Connection(host=settings.MONGODB_HOST)
 class QiDB(object):
     def __init__(self, db_name='qi'):
         """Set up the database"""
-        self.db = MONGODB_CONNECTION[db_name]
+        self.db = MONGODB_CONNECTION["app1875861"]
         logging.debug('Connected to database: {}'.format(db_name))
 
     def get_entry(self, entryid, created_by):
