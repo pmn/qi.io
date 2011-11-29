@@ -14,14 +14,13 @@
       <form >
 	<input type="text" placeholder="Search">
       </form>
+      {% if user != None %}
       <ul class="nav secondary-nav">
 	<li class="active"><a href="#">Diary</a></li>
 	<li><a href="#">Calendar</a></li>
 	<li><a href="#">To-Do</a></li>
 	<li class="dropdown">
-	  {% if user != None %}
 	  <a href="#" class="dropdown-toggle">{{ user['username'] }}</a>
-	  {% endif %}
 	  <ul class="dropdown-menu">
 	    <li>
 	      <a href="#">Settings</a>
@@ -32,6 +31,7 @@
 	  </ul>
 	</li>
       </ul>
+      {% endif %}
     </div>
   </div>
 </div>
@@ -61,7 +61,6 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/site.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-dropdown.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-alert.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/g.js') }}"></script>
 {% block scripts %}{% endblock %}
 </body>
