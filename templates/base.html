@@ -11,7 +11,13 @@
   <div class="topbar-inner">
     <div class="container">
       <h3><a href="/">qi.io</a></h3>
+      <form >
+	<input type="text" placeholder="Search">
+      </form>
       <ul class="nav secondary-nav">
+	<li class="active"><a href="#">Diary</a></li>
+	<li><a href="#">Calendar</a></li>
+	<li><a href="#">To-Do</a></li>
 	<li class="dropdown">
 	  {% if user != None %}
 	  <a href="#" class="dropdown-toggle">{{ user['username'] }}</a>
