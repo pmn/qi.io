@@ -40,7 +40,8 @@ class QiDB(object):
         logging.info('Saving entry: {}'.format(repr(entry)))
 
         # Insert the new entry
-        self.db.entries.update({'id': entry.id},
+        self.db.entries.update({'id': entry.id,
+                                'created_by': entry.created_by},
                                {'$set': {'id': entry.id,
                                          'raw_body': entry.raw_body,
                                          'tags': entry.tags,
