@@ -1,21 +1,34 @@
 from datetime import datetime
 
+import bcrypt
 import db_api
 import utils
 
 db = db_api.QiDB()
 
 class User(object):
-    def __init__(self, username, password=None, email=None, created_at=None, invitation_code=None):
-        self.username = username
-        self.password = password
-        self.email = email
-        self.invitation_code = invitation_code
-        if created_at == None:
+    def __init__(self, username=None):
+        if username:
+            record = db.get_user(username)
+            if record:
+                self.username = record.get('username')
+                self.password = record.get('password')
+                self.email = record.get('email')
+                self.invitation_code = record.get('invitation_code')
+                self.created_at = record.get('created_at')
+                self.updated_at = record.get('updated_at')
+        else:
             self.created_at = datetime.now()
+            self.updated_at = datetime.now()
 
     def __repr__(self):
         return "<User {}>".format(self.username)
+
+    def authenticate(self, password):
+        if hasattr(self, 'password'):
+            return bcrypt.hashpw(password, self.password) == self.password
+        else:
+            return False
 
     def entries(self):
         """All the entries belonging to the user"""

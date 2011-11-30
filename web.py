@@ -4,7 +4,7 @@ from forms import SigninForm, SignupForm
 import logging
 import argparse
 
-import bcrypt
+
 from datetime import datetime
 
 import settings
@@ -86,9 +86,12 @@ def signin():
         # Log the user in
         username = request.form['username']
         password = request.form['password']
-        user_record = db.get_user(username)
-        if user_record and bcrypt.hashpw(password, user_record['password']):
-            user = User(username, email=user_record['email'])
+
+        assert isinstance(username, basestring)
+        assert isinstance(password, basestring)
+
+        user = User(username)
+        if user.authenticate(password):
             session['user'] = user
             logging.info("User signed in: {}".format(username))
             return redirect(url_for('home'))
@@ -106,18 +109,9 @@ def signup():
     """Register a user"""
     form = SignupForm()
     user = session.get('user')
-
     if request.method == 'POST' and form.validate():
         # Add the user
         username = request.form['username']
-        existing_user = db.get_user(username)
-
-        if existing_user:
-            flash("This username has already been reserved, please choose another")
-            return render_template("signup.html",
-                                   form=form,
-                                   user=user)
-
         password = bcrypt.hashpw(request.form['password'], 
                                  bcrypt.gensalt(settings.BCRYPT_WORK_FACTOR))
         invitation_code = request.form['invitation_code']

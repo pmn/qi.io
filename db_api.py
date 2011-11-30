@@ -50,14 +50,12 @@ class QiDB(object):
                                          'parsed': False}},
                                upsert=True)
 
-
     def get_scratchpad_for_user(self, username):
         """Get the user's scratchpad"""
         logging.debug('Fetching scratchpad for user: {}'.format(username))
         return self.db.entries.find_one({'id': 'scratchpad',
-                                    'created_by': username})
+                                         'created_by': username})
         
-
     def get_user(self, username):
         """Fetch a user record"""
         logging.debug('Fetching user: {}'.format(username))
@@ -66,6 +64,9 @@ class QiDB(object):
     def save_user(self, user):
         """Save a user record"""
         logging.info('Saving user: {}'.format(repr(user)))
-        self.db.users.insert({'username': user.username,
-                              'password': user.password,
-                              'email': user.email})
+        self.db.users.update({'username': username},
+                             {'$set': {'username': user.username,
+                                       'password': user.password,
+                                       'email': user.email,
+                                       'invitation_code': user.invitation_code }},
+                             upsert=True)
