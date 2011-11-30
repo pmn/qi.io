@@ -22,18 +22,12 @@ def home():
     today_id = datetime.now().strftime('%Y%m%d')
     user = session.get('user')
     if user:
-        entries = user.entries()
         current_entry = user.current_entry()
-        scratchpad = user.scratchpad()
     else:
-        entries = []
-        scratchpad = None
         current_entry = None
 
     return render_template("index.html",
-                           scratchpad=scratchpad,
                            user=user,
-                           entries=entries,
                            current_entry=current_entry,
                            current_date=datetime.now())
 
@@ -43,16 +37,16 @@ def saveentry():
     """Save the entry (ajax)"""
     user = session['user']
     entry_id = request.form['entry_id']
-
-    entry_record = db.get_entry(entry_id, user.username)
-    created_at = None
-    tags = []
-    if entry_record:
-        created_at = entry_record['created_at']
-        tags = entry_record['tags']
-
     raw_body = request.form['raw_body']
-    entry = Entry(raw_body, user.username, entry_id, tags, created_at)
+
+    assert user
+    assert entry_id
+    assert isinstance(entry_id, basestring)
+    assert isinstance(raw_body, basestring)
+ 
+    entry = Entry(entry_id, user.username)
+    entry.raw_body = raw_body
+    
     entry.save()
     logging.info("Saving entry with id {} for user {}".format(entry_id, user.username))
     return "ok"
@@ -62,19 +56,16 @@ def saveentry():
 def newentry():
     """Create a new entry"""
     user = session['user']
+    assert user
 
-    current_entry = user.current_entry()
-    if current_entry:
-        newentry = Entry('', user.username, id=utils.nextid(current_entry.id))
-    else:
-        newentry = Entry('', user.username)
+    new_entry = Entry(None, user.username)
+    new_entry.save()
  
-    db.save_entry(newentry)
-    logging.info("Creating a new entry with id {} for user {}".format(newentry.id, user.username))
+    logging.info("Creating a new entry with id {} for user {}".format(new_entry.id, user.username))
     if request.method == 'GET':
         return redirect(url_for('home'))
     else:
-        return newentry
+        return new_entry
 
 
 @app.route("/signin", methods=['GET', 'POST'])
@@ -108,25 +99,34 @@ def signin():
 def signup():
     """Register a user"""
     form = SignupForm()
-    user = session.get('user')
+    user = None
+
     if request.method == 'POST' and form.validate():
         # Add the user
         username = request.form['username']
-        password = bcrypt.hashpw(request.form['password'], 
-                                 bcrypt.gensalt(settings.BCRYPT_WORK_FACTOR))
+        password = request.form['password']
         invitation_code = request.form['invitation_code']
-        user = User(username, password)
 
-        db.save_user(user)
+        if username and password:
+            if db.get_user(username):
+                # This username already exists
+                flash("This username has already been reserved, please choose another")
+                return render_template("signup.html",
+                                       form=form,
+                                       user=None)
 
-        # Log the user in
-        user = User(username, email='')
-        session['user'] = user
+            user = User(username)
+            user.invitation_code = invitation_code
+            user.set_password(password)
 
-        logging.info("User created: {}".format(username))
-
-        flash("Successfully registered. Welcome, {}!".format(username))
-        return redirect(url_for('home'))
+            user.save()
+            # Log the user in
+            session['user'] = user
+            
+            logging.info("User created: {}".format(username))
+            
+            flash("Successfully registered. Welcome, {}!".format(username))
+            return redirect(url_for('home'))
     return render_template("signup.html",
                            form=form,
                            user=user)

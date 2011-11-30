@@ -47,6 +47,8 @@ class QiDB(object):
                                          'tags': entry.tags,
                                          'created_by': entry.created_by,
                                          'created_at': entry.created_at,
+                                         'updated_by': entry.updated_by,
+                                         'updated_at': entry.updated_at,
                                          'parsed': False}},
                                upsert=True)
 
@@ -64,9 +66,11 @@ class QiDB(object):
     def save_user(self, user):
         """Save a user record"""
         logging.info('Saving user: {}'.format(repr(user)))
-        self.db.users.update({'username': username},
+        self.db.users.update({'username': user.username},
                              {'$set': {'username': user.username,
                                        'password': user.password,
                                        'email': user.email,
-                                       'invitation_code': user.invitation_code }},
+                                       'invitation_code': user.invitation_code,
+                                       'created_at': user.created_at,
+                                       'updated_at': user.updated_at}},
                              upsert=True)

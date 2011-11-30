@@ -24,7 +24,7 @@
 //-->
 <div>
   <h4>scratchpad</h4>
-  <div id="scratchpad" contenteditable="true" class="editbox">{{ scratchpad.raw_body|safe }}</div>
+  <div id="scratchpad" contenteditable="true" class="editbox">{{ user.scratchpad().raw_body|safe }}</div>
 </div>
 
 <div>
@@ -43,7 +43,7 @@
 <h3>today:</h3>
 <div id="{{ current_entry.id }}" class="editbox" contenteditable="true">{{ current_entry.raw_body|safe }}</div>
 <hr>
-{% for entry in entries %}
+{% for entry in user.entries() %}
 {% if entry.id != current_entry.id %}
 <span class="entrydate">{{ entry.created_at.strftime("%Y-%m-%d") }}</span>
 <div class="editbox" contenteditable="true" id="{{ entry.id }}">{{ entry.raw_body|safe }}</div>
