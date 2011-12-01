@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import re
 import bcrypt
 import db_api
 import utils
@@ -84,6 +85,7 @@ class Entry(object):
             self.created_by = created_by
             self.raw_body = record.get('raw_body')
             self.tags = record.get('tags')
+            self.keywords = record.get('_keywords')
             self.created_at = record.get('created_at')
             self.updated_by = record.get('updated_by')
             self.updated_at = record.get('updated_at')
@@ -91,6 +93,7 @@ class Entry(object):
             # Create a new entry
             self.raw_body = ''
             self.tags = []
+            self.keywords = []
             self.created_by = created_by
             self.updated_by = created_by
             self.created_at = datetime.now()
@@ -111,4 +114,11 @@ class Entry(object):
 
     def save(self):
         """Save the entry in the db"""
+        # First update the tags
+        taglist = [utils.strip_punctuation(tag) for tag in re.findall(r"#(\S+)", self.raw_body)]
+        self.tags = taglist
+
+        # Populate a wordlist for searching
+        
+
         return db.save_entry(self)

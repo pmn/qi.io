@@ -14,10 +14,10 @@
       <ul class="nav">
 	<li>&nbsp;&nbsp;&nbsp;&nbsp;</li>
       </ul>
-      <form >
-	<input type="text" placeholder="Search">
+      <form action="/search" method="POST">
+	<input type="text" name="searchterm" placeholder="Search">
       </form>
-      {% if user != None %}
+      {% if g.user != None %}
       <ul class="nav secondary-nav">
 	<li class="active"><a href="#">Diary</a></li>
 	<li><a href="#">Topics</a></li>
@@ -25,7 +25,7 @@
 	<li><a href="#">Calendar</a></li>
 	<li><a href="#">To-Do</a></li>
 	<li class="dropdown">
-	  <a href="#" class="dropdown-toggle">{{ user['username'] }}</a>
+	  <a href="#" class="dropdown-toggle">{{ g.user['username'] }}</a>
 	  <ul class="dropdown-menu">
 	    <li>
 	      <a href="#">Settings</a>

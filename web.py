@@ -1,5 +1,5 @@
 # qi: smart notes
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, g
 from forms import SigninForm, SignupForm
 import logging
 import argparse
@@ -16,18 +16,22 @@ app = Flask(__name__)
 
 db = db_api.QiDB()
 
+@app.before_request
+def before_request():
+    g.user = session.get('user')
+    
+
 @app.route("/")
 def home():
     """Display the home page"""
     today_id = datetime.now().strftime('%Y%m%d')
-    user = session.get('user')
-    if user:
-        current_entry = user.current_entry()
+
+    if g.user:
+        current_entry = g.user.current_entry()
     else:
         current_entry = None
 
     return render_template("index.html",
-                           user=user,
                            current_entry=current_entry,
                            current_date=datetime.now())
 
@@ -51,6 +55,26 @@ def saveentry():
     logging.info("Saving entry with id {} for user {}".format(entry_id, user.username))
     return "ok"
 
+@app.route("/topic/<topic>")
+def showtopic(topic):
+    """Show the topic page"""
+    return render_template("topic.html",
+                           topic=topic)
+
+
+@app.route("/search", methods=['POST'])
+def search_redirect():
+    
+    term = request.form['searchterm']
+    print "in search_redirect"
+    return redirect(url_for('search', term=term))
+
+
+@app.route("/search/<term>", methods=['GET', 'POST'])
+def search(term):
+    """Search for <term>"""
+    return render_template("searchresults.html",
+                           searchterm=term)
 
 @app.route("/newentry", methods=['GET','POST'])
 def newentry():

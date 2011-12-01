@@ -45,6 +45,7 @@ class QiDB(object):
                                {'$set': {'id': entry.id,
                                          'raw_body': entry.raw_body,
                                          'tags': entry.tags,
+                                         '_keywords': entry.keywords,
                                          'created_by': entry.created_by,
                                          'created_at': entry.created_at,
                                          'updated_by': entry.updated_by,

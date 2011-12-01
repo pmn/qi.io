@@ -1,5 +1,6 @@
 from datetime import datetime
 from decimal import Decimal
+import re
 import unittest
 
 
@@ -15,7 +16,11 @@ def nextid(start_id=None):
             return test_id + ".01"
 
 
-class TextNextid(unittest.TestCase):
+def strip_punctuation(text):
+    return re.sub(r'[^A-Za-z0-9 ]', '', text)
+
+
+class TestNextid(unittest.TestCase):
     def test_basic(self):
         test_id = datetime.now().strftime("%Y%m%d.01")
         test_id_2 = datetime.now().strftime("%Y%m%d.02")
@@ -27,6 +32,15 @@ class TextNextid(unittest.TestCase):
         for testdate, result in test_cases:
             self.assertTrue(str(nextid(testdate)) == result)
 
+class TestStripPunctuation(unittest.TestCase):
+    def test_basic(self):
+        test_cases = (
+            ('now!', 'now'),
+            ('do, some, stuff.', 'do some stuff'),
+            ('?wat wat wat?!?!?!', 'wat wat wat'),
+            )
+        for testphrase, result in test_cases:
+            self.assertTrue(strip_punctuation(testphrase) == result)
 
 if __name__ == "__main__":
     unittest.main()
