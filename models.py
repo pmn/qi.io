@@ -69,6 +69,10 @@ class User(object):
             scratchpad.save()
             return scratchpad
 
+    def is_admin(self):
+        """Return true if the user is an admin"""
+        return self.username in settings.ADMIN_USERS
+
     def save(self):
         """Save the user in the db"""
         return db.save_user(self)
