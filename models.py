@@ -1,10 +1,11 @@
 from datetime import datetime
-
+import json
 import re
 import bcrypt
 import db_api
 import utils
 import settings
+import markdown
 
 db = db_api.QiDB()
 
@@ -87,6 +88,7 @@ class Entry(object):
         if record:
             self.id = id
             self.created_by = created_by
+            self.body = record.get('body')
             self.raw_body = record.get('raw_body')
             self.tags = record.get('tags')
             self.keywords = record.get('_keywords')
@@ -95,6 +97,7 @@ class Entry(object):
             self.updated_at = record.get('updated_at')
         else:
             # Create a new entry
+            self.body = ''
             self.raw_body = ''
             self.tags = []
             self.keywords = []
@@ -116,6 +119,18 @@ class Entry(object):
     def __repr__(self):
         return "<Entry {} created by {}>".format(self.id, self.created_by)
 
+    
+    def to_json(self):
+        """Return a json representation of the object"""
+        obj = {'id': self.id, 
+               'created_by': self.created_by,
+               'body':self.body,
+               'raw_body':self.raw_body,
+               'tags':self.tags,
+               }
+        
+        return json.dumps(obj)
+
     def save(self):
         """Save the entry in the db"""
         # First update the tags
@@ -124,5 +139,8 @@ class Entry(object):
 
         # Populate a wordlist for searching
         
-
-        return db.save_entry(self)
+        # Translate the raw body to the markdownified body
+        self.body = markdown.markdown(self.raw_body)
+        
+        db.save_entry(self)
+        return self

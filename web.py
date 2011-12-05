@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from forms import SigninForm, SignupForm
 import logging
 import argparse
-
+import json
 
 from datetime import datetime
 
@@ -37,7 +37,7 @@ def home():
 
 
 @app.route("/save", methods=['POST'])
-def saveentry():
+def save_entry():
     """Save the entry (ajax)"""
     user = session['user']
     entry_id = request.form['entry_id']
@@ -51,12 +51,11 @@ def saveentry():
     entry = Entry(entry_id, user.username)
     entry.raw_body = raw_body
     
-    entry.save()
-    logging.info("Saving entry with id {} for user {}".format(entry_id, user.username))
-    return "ok"
+    entry = entry.save()
+    return json.dumps(entry.to_json())
 
 @app.route("/topic/<topic>")
-def showtopic(topic):
+def show_topic(topic):
     """Show the topic page"""
     return render_template("topic.html",
                            topic=topic)
@@ -76,6 +75,7 @@ def search(term):
     return render_template("searchresults.html",
                            searchterm=term)
 
+
 @app.route("/newentry", methods=['GET','POST'])
 def newentry():
     """Create a new entry"""
@@ -93,7 +93,7 @@ def newentry():
 
 
 @app.route("/signin", methods=['GET', 'POST'])
-def signin():
+def sign_in():
     """Sign the user in"""
     form = SigninForm()
     user = None
@@ -120,7 +120,7 @@ def signin():
 
 
 @app.route("/signup", methods=['GET', 'POST'])
-def signup():
+def sign_up():
     """Register a user"""
     form = SignupForm()
     user = None
@@ -157,7 +157,7 @@ def signup():
 
 
 @app.route("/signout")
-def signout():
+def sign_out():
     session.pop('user')
     return redirect(url_for('home'))
 

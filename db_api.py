@@ -43,6 +43,7 @@ class QiDB(object):
         self.db.entries.update({'id': entry.id,
                                 'created_by': entry.created_by},
                                {'$set': {'id': entry.id,
+                                         'body': entry.body,
                                          'raw_body': entry.raw_body,
                                          'tags': entry.tags,
                                          '_keywords': entry.keywords,

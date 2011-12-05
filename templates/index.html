@@ -22,18 +22,28 @@
 <div class="row">
 <div class="span11">
 <h3>today</h3>
-<div id="{{ current_entry.id }}" class="editbox" contenteditable="true">{{ current_entry.raw_body|safe }}</div>
-{% for tag in current_entry.tags %}
-<span class="entrytag label" id="topic_{{ tag }}"><a href="/topic/{{ tag }}">{{ tag }}</a></span>
-{% endfor %}
+<div id="{{ current_entry.id }}" class="displaybox" >{{ current_entry.body|safe }}</div>
+<textarea class="editbox span11" id="{{ current_entry.id }}">{{ current_entry.raw_body }}</textarea>
+<div id="tags_{{ current_entry.id }}" class="entrytags">
+  {% for tag in current_entry.tags -%}
+  <span class="entrytag label" id="topic_{{ tag }}">
+    <a href="/topic/{{ tag }}">{{ tag }}</a>
+  </span>&nbsp;
+  {%- endfor %}
+</div>
 <hr>
 {% for entry in g.user.entries() %}
 {% if entry.id != current_entry.id %}
 <span class="entrydate"><h3>{{ entry.created_at.strftime("%Y-%m-%d") }}</h3></span>
-<div class="editbox" contenteditable="true" id="{{ entry.id }}">{{ entry.raw_body|safe }}</div>
-{% for tag in entry.tags %}
-<span class="entrytag label" id="topic_{{ tag }}"><a href="/topic/{{ tag }}">{{ tag }}</a></span>
-{% endfor %}
+<div class="displaybox" id="{{ entry.id }}">{{ entry.body|safe }}</div>
+<textarea class="editbox" id="{{ entry.id }}">{{ entry.raw_body }}</textarea>
+<div id="tags_{{ entry.id }}" class="entrytags">
+  {% for tag in entry.tags -%}
+  <span class="entrytag label" id="topic_{{ tag }}">
+    <a href="/topic/{{ tag }}">{{ tag }}</a>
+  </span>&nbsp;
+  {%- endfor %}
+</div>
 <br>
 {% endif %}
 {% endfor %}
@@ -42,7 +52,7 @@
 {% else %}
 <h2>Currently in closed beta, please come back another time.</h1>
 <h3>
-  <a href="{{ url_for('signin') }}">Sign in</a> or <a href="{{ url_for('signup') }}">Sign up</a>
+  <a href="{{ url_for('sign_in') }}">Sign in</a> or <a href="{{ url_for('sign_up') }}">Sign up</a>
 </h3>
 {% endif %}
 {% endblock %}
