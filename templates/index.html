@@ -17,15 +17,21 @@
 
 {% block content %}
 {% if g.user != None %}
+
+<h3>
+  <a href="{{ url_for('home') }}">All entries</a>
+  {% if topic %} > #{{ topic }}{% endif %}
+</h3>
+
 <div class="row">
 <div class="span11">
-  {% for entry in g.user.entries() -%}
+  {% for entry in entries -%}
   <div id="entry_{{ entry.id }}">
     <span class="entrydate"><h3>{{ entry.created_at.strftime("%Y-%m-%d") }}</h3></span>
     <div class="displaybox" id="{{ entry.id }}">{{ entry.body|safe }}</div>
     <textarea class="editbox span11" id="{{ entry.id }}">{{ entry.raw_body }}</textarea>
     <div class="entrybar">
-      <span id="tools_{{ current_entry.id }}" class="entrytools">
+      <span id="tools_{{ entry.id }}" class="entrytools">
 	<a href="#" onclick="beginEdit('{{ entry.id }}'); return false;" rel="nofollow">Edit Entry</a>
 	<a href="#" onclick="deleteEntry('{{ entry.id }}'); return false;" rel="nofollow">Delete Entry</a>
       </span>
@@ -50,11 +56,10 @@
 <p>It helps you keep track of the things you've done and the things you need to do.</p>
 
 <h3>
-  We are currently in closed beta. 
+  We are currently in closed beta.
 </h3>
-<h3> If you have an invite or an account you can 
+<h3> If you have an invite or an account you can
   <a href="{{ url_for('sign_in') }}">Sign in</a> or <a href="{{ url_for('sign_up') }}">Sign up</a>
 </h3>
 {% endif %}
 {% endblock %}
-

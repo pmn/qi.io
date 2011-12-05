@@ -19,7 +19,7 @@ db = db_api.QiDB()
 @app.before_request
 def before_request():
     g.user = session.get('user')
-    
+
 
 @app.route("/")
 def home():
@@ -27,13 +27,12 @@ def home():
     today_id = datetime.now().strftime('%Y%m%d')
 
     if g.user:
-        current_entry = g.user.current_entry()
+        entries = g.user.entries()
     else:
-        current_entry = None
+        entries = None
 
     return render_template("index.html",
-                           current_entry=current_entry,
-                           current_date=datetime.now())
+                           entries=entries)
 
 
 @app.route("/save", methods=['POST'])
@@ -47,19 +46,20 @@ def save_entry():
     assert entry_id
     assert isinstance(entry_id, basestring)
     assert isinstance(raw_body, basestring)
- 
+
     entry = Entry(entry_id, user.username)
     entry.raw_body = raw_body
-    
+
     entry = entry.save()
     return json.dumps(entry.to_json())
+
 
 @app.route("/delete", methods=['POST', 'DELETE'])
 def delete_entry():
     """Delete the entry"""
     user = session['user']
     entry_id = request.form['entry_id']
-    
+
     assert user
     assert entry_id
     assert isinstance(entry_id, basestring)
@@ -70,16 +70,20 @@ def delete_entry():
     entry = entry.delete()
     return "ok"
 
+
 @app.route("/topic/<topic>")
 def show_topic(topic):
     """Show the topic page"""
-    return render_template("topic.html",
-                           topic=topic)
+    user = session['user']
+    entries = db.get_tagged_entries(user.username, topic)
+    return render_template("index.html",
+                           topic=topic,
+                           entries=entries)
 
 
 @app.route("/search", methods=['POST'])
 def search_redirect():
-    
+
     term = request.form['searchterm']
     print "in search_redirect"
     return redirect(url_for('search', term=term))
@@ -100,7 +104,7 @@ def newentry():
 
     new_entry = Entry(None, user.username)
     new_entry.save()
- 
+
     logging.info("Creating a new entry with id {} for user {}".format(new_entry.id, user.username))
     if request.method == 'GET':
         return redirect(url_for('home'))
@@ -130,7 +134,7 @@ def sign_in():
             flash("Incorrect username or password")
             logging.info("Incorrect username or password for user: {}".format(username))
             return render_template("signin.html", form=form, user=user)
-    return render_template("signin.html", 
+    return render_template("signin.html",
                            form=form,
                            user=user)
 
@@ -162,9 +166,9 @@ def sign_up():
             user.save()
             # Log the user in
             session['user'] = user
-            
+
             logging.info("User created: {}".format(username))
-            
+
             flash("Successfully registered. Welcome, {}!".format(username))
             return redirect(url_for('home'))
     return render_template("signup.html",
@@ -220,6 +224,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     init_logging(args)
-    app.run(port=settings.APP_PORT, 
-            debug=settings.APP_DEBUG_ENABLED, 
+    app.run(port=settings.APP_PORT,
+            debug=settings.APP_DEBUG_ENABLED,
             use_reloader=settings.APP_RELOADER_ENABLED)

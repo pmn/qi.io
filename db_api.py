@@ -36,6 +36,13 @@ class QiDB(object):
         else:
             return None
 
+    def get_tagged_entries(self, username, tag):
+        """Get entries for user with <username> tagged with <tag>"""
+        logging.debug('Fetching {}\'s entries tagged with {}'.format(username, tag))
+        return self.db.entries.find({'created_by': username,
+                                     'id': {'$ne': 'scratchpad'},
+                                     'tags': tag}).sort('id', pymongo.DESCENDING)
+
     def save_entry(self, entry):
         """Save an entry into the database"""
         logging.info('Saving entry: {}'.format(repr(entry)))
@@ -58,7 +65,7 @@ class QiDB(object):
     def delete_entry(self, entry):
         """'Delete' an entry from the database"""
         logging.info('Deleting entry: {}'.format(repr(entry)))
-        
+
         # Insert a backup into the deleted items collection
         self.db.deleted_entries.update({'id': entry.id,
                                         'created_by': entry.created_by},
@@ -73,7 +80,7 @@ class QiDB(object):
                                                  'updated_at': entry.updated_at,
                                                  'deleted_at': datetime.datetime.now()}},
                                        upsert=True)
-        
+
         # Delete the old item
         self.db.entries.remove({'id': entry.id,
                                 'created_by': entry.created_by},
@@ -85,7 +92,7 @@ class QiDB(object):
         logging.debug('Fetching scratchpad for user: {}'.format(username))
         return self.db.entries.find_one({'id': 'scratchpad',
                                          'created_by': username})
-        
+
     def get_user(self, username):
         """Fetch a user record"""
         logging.debug('Fetching user: {}'.format(username))
