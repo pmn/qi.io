@@ -1,6 +1,7 @@
 Flask==0.8
 Flask-WTF==0.5.2
 Jinja2==2.6
+Markdown==2.1.0
 WTForms==0.6.3
 Werkzeug==0.8.1
 gunicorn==0.13.4
