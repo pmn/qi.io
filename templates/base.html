@@ -14,7 +14,7 @@
       <ul class="nav">
 	<li>&nbsp;&nbsp;&nbsp;&nbsp;</li>
       </ul>
-      <form action="/search" method="POST">
+      <form action="{{ url_for('search_redirect') }}" method="POST">
 	<input type="text" name="searchterm" placeholder="Search">
       </form>
       {% if g.user != None %}
@@ -34,7 +34,7 @@
 	      <a href="#">Settings</a>
 	    </li>
 	    <li>
-	      <a href="/sign_out">Sign out</a>
+	      <a href="{{ url_for('sign_out') }}">Sign out</a>
 	    </li>
 	  </ul>
 	</li>

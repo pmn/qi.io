@@ -54,7 +54,7 @@ class User(object):
         else:
             # Create an entry if there aren't any yet
             entry = Entry(None, self.username)
-            entry.raw_body = 'Click here and start typing!'
+            entry.raw_body = 'Double-click here and start typing!'
             entry.save()
         return entry
 
