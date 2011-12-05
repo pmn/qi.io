@@ -78,6 +78,18 @@ function notify_save_successful(){
     markpageclean();
 }
 
+function deleteEntry(entryid){
+    // delete an entry
+    var answer = confirm("Really delete this entry?");
+
+    if (answer){
+	$.post("/delete", { 'entry_id': entryid }, 
+	       function(data){
+		   $('div[id="entry_' + entryid + '"]').fadeOut();
+	       });
+    }
+}
+
 $(".editbox").focus(function(e){
     // Nothing to do right now - later this will be used to track whether something has changed
 });

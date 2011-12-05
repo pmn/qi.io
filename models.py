@@ -131,6 +131,10 @@ class Entry(object):
         
         return json.dumps(obj)
 
+    def delete(self):
+        """Delete the entry from the db"""
+        db.delete_entry(self)
+
     def save(self):
         """Save the entry in the db"""
         # First update the tags

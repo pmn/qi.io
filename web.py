@@ -54,6 +54,22 @@ def save_entry():
     entry = entry.save()
     return json.dumps(entry.to_json())
 
+@app.route("/delete", methods=['POST', 'DELETE'])
+def delete_entry():
+    """Delete the entry"""
+    user = session['user']
+    entry_id = request.form['entry_id']
+    
+    assert user
+    assert entry_id
+    assert isinstance(entry_id, basestring)
+
+    entry = Entry(entry_id, user.username)
+    assert entry.created_by == user.username
+
+    entry = entry.delete()
+    return "ok"
+
 @app.route("/topic/<topic>")
 def show_topic(topic):
     """Show the topic page"""

@@ -1,4 +1,5 @@
 # db interactions
+import datetime
 import logging
 import pymongo
 import settings
@@ -53,6 +54,31 @@ class QiDB(object):
                                          'updated_at': entry.updated_at,
                                          'parsed': False}},
                                upsert=True)
+
+    def delete_entry(self, entry):
+        """'Delete' an entry from the database"""
+        logging.info('Deleting entry: {}'.format(repr(entry)))
+        
+        # Insert a backup into the deleted items collection
+        self.db.deleted_entries.update({'id': entry.id,
+                                        'created_by': entry.created_by},
+                                       {'$set': {'id': entry.id,
+                                                 'body': entry.body,
+                                                 'raw_body': entry.raw_body,
+                                                 'tags': entry.tags,
+                                                 '_keywords': entry.keywords,
+                                                 'created_by': entry.created_by,
+                                                 'created_at': entry.created_at,
+                                                 'updated_by': entry.updated_by,
+                                                 'updated_at': entry.updated_at,
+                                                 'deleted_at': datetime.datetime.now()}},
+                                       upsert=True)
+        
+        # Delete the old item
+        self.db.entries.remove({'id': entry.id,
+                                'created_by': entry.created_by},
+                               multi=True)
+
 
     def get_scratchpad_for_user(self, username):
         """Get the user's scratchpad"""
