@@ -12,41 +12,32 @@
     <li><a href="/newentry">New Entry</a></li>
   </ul>
 </div>
-
 {% endif %}
 {% endblock %}
-
 
 {% block content %}
 {% if g.user != None %}
 <div class="row">
 <div class="span11">
-<h3>today</h3>
-<div id="{{ current_entry.id }}" class="displaybox" >{{ current_entry.body|safe }}</div>
-<textarea class="editbox span11" id="{{ current_entry.id }}">{{ current_entry.raw_body }}</textarea>
-<div id="tags_{{ current_entry.id }}" class="entrytags">
-  {% for tag in current_entry.tags -%}
-  <span class="entrytag label" id="topic_{{ tag }}">
-    <a href="/topic/{{ tag }}">{{ tag }}</a>
-  </span>&nbsp;
-  {%- endfor %}
-</div>
-<hr>
-{% for entry in g.user.entries() %}
-{% if entry.id != current_entry.id %}
-<span class="entrydate"><h3>{{ entry.created_at.strftime("%Y-%m-%d") }}</h3></span>
-<div class="displaybox" id="{{ entry.id }}">{{ entry.body|safe }}</div>
-<textarea class="editbox" id="{{ entry.id }}">{{ entry.raw_body }}</textarea>
-<div id="tags_{{ entry.id }}" class="entrytags">
-  {% for tag in entry.tags -%}
-  <span class="entrytag label" id="topic_{{ tag }}">
-    <a href="/topic/{{ tag }}">{{ tag }}</a>
-  </span>&nbsp;
-  {%- endfor %}
-</div>
-<br>
-{% endif %}
-{% endfor %}
+  {% for entry in g.user.entries() %}
+  <span class="entrydate"><h3>{{ entry.created_at.strftime("%Y-%m-%d") }}</h3></span>
+  <div class="displaybox" id="{{ entry.id }}">{{ entry.body|safe }}</div>
+  <textarea class="editbox span11" id="{{ entry.id }}">{{ entry.raw_body }}</textarea>
+  <div class="entrybar">
+    <span id="tools_{{ current_entry.id }}" class="entrytools">
+      <a href="#" onclick="beginEdit('{{ entry.id }}'); return false;" rel="nofollow">Edit Entry</a>
+      <!-- <a href="#" rel="nofollow">Delete Entry</a> //-->
+    </span>
+    <span id="tags_{{ entry.id }}" class="entrytags">
+      {% for tag in entry.tags -%}
+      <span class="entrytag label" id="topic_{{ tag }}">
+	<a href="/topic/{{ tag }}">{{ tag }}</a>
+      </span>&nbsp;
+      {%- endfor %}
+    </span>
+  </div>
+  <br>
+  {% endfor %}
 </div>
 </div>
 {% else %}

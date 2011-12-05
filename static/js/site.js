@@ -12,7 +12,7 @@ function updateEntryText(entry){
 }
 
 function updateEntryTags(entry){
-    var tagbox = $('div[id="tags_' + entry.id +'"]');
+    var tagbox = $('span[id="tags_' + entry.id +'"]');
     tagbox.empty();
 
     for (var tag in entry.tags){
@@ -43,7 +43,7 @@ function beginEdit(entryid){
 
     displaybox.hide();
     editbox.show();
-
+    $('textarea[id="' + entryid + '"]').autogrow();
     editbox.focus();
 }
 
@@ -53,7 +53,10 @@ function completeEdit(entryid){
     editbox =  $('textarea[id="' + entryid +'"]');
     displaybox = $('div[id="' + entryid +'"]');
 
-    editbox.hide();
+    if (entryid != "scratchpad"){
+	editbox.hide();
+    };
+
     displaybox.show();
 }
 
@@ -89,3 +92,6 @@ $(".editbox").blur(function(e){
 $(".displaybox").on("dblclick", function(event){
     beginEdit($(this).attr("id"));
 });
+
+// Set up textarea auto-growing
+$('textarea[id="scratchpad"]').autogrow();

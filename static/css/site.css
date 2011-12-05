@@ -12,6 +12,7 @@ div.displaybox {
     white-space:pre;
     white-space:pre-wrap;
     word-wrap:break-word;
+    min-height: 3em;
 }
 
 
@@ -44,6 +45,9 @@ div.notice {
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
+textarea.scratchbox {
+    width: 200px;
+}
 
 textarea.editbox {
     display: none;
@@ -60,4 +64,12 @@ textarea.editbox {
     white-space:pre;
     white-space:pre-wrap;
     word-wrap:break-word;
+}
+
+.entrytools {
+    float: left;
+}
+
+.entrytags {
+    float: right;
 }
