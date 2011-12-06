@@ -22,16 +22,18 @@
 	{% if g.user.is_admin() %}
 	<li><a href="/admin">Admin</a></li>
 	{% endif %}
-	<li class="active"><a href="#">Diary</a></li>
-	<li><a href="#">Topics</a></li>
+	<li class="active"><a href="{{ url_for('home') }}">Diary</a></li>
+	<li><a href="{{ url_for('topics') }}">Topics</a></li>
+	<!--
 	<li><a href="#">People</a></li>
 	<li><a href="#">Calendar</a></li>
 	<li><a href="#">To-Do</a></li>
+	//-->
 	<li class="dropdown">
 	  <a href="#" class="dropdown-toggle">{{ g.user['username'] }}</a>
 	  <ul class="dropdown-menu">
 	    <li>
-	      <a href="#">Settings</a>
+	      <a href="/settings">Settings</a>
 	    </li>
 	    <li>
 	      <a href="{{ url_for('sign_out') }}">Sign out</a>
@@ -52,7 +54,7 @@
       <h4>scratchpad</h4>
       <textarea id="scratchpad" class="editbox scratchbox" >{{ g.user.scratchpad().raw_body|safe }}</textarea>
     </div>
-    
+
     <div>
       <h6>notifications</h6>
       <div id="notifications"></div>

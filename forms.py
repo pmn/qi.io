@@ -1,9 +1,11 @@
 from flaskext.wtf import Form, HiddenField, TextField, TextAreaField, PasswordField, Required, EqualTo
 from datetime import datetime
 
-class EntryForm(Form):
-    entry_id = HiddenField(default=datetime.now().strftime("%Y%m%d.01"))
-    body = TextAreaField(validators=[Required()])
+class SettingsForm(Form):
+    password = PasswordField()
+    confirm = PasswordField(validators=[EqualTo('password',
+                                                message='Password & confirmation must match')])
+    email = TextField()
 
 
 class SigninForm(Form):

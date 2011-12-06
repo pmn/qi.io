@@ -21,9 +21,6 @@ div.editbox:hover {
     cursor: hand;
 }
 
-div.editbox:focus {
-    background-color: #F8F9BB;
-}
 
 div.container-fluid {
     min-height: 100%;
@@ -51,9 +48,8 @@ textarea.scratchbox {
 
 textarea.editbox {
     display: none;
-    background-color:#f5f5f5;
     font-family: Monaco, Andale Mono, Courier New, monospace;
-    padding:8.5px; 
+    padding:8.5px;
     line-height:18px;
     font-size:12px;
     border:1px solid #ccc;
@@ -64,6 +60,10 @@ textarea.editbox {
     white-space:pre;
     white-space:pre-wrap;
     word-wrap:break-word;
+}
+
+textarea.editbox:focus {
+    background-color: #F8F9BB;
 }
 
 .entrytools {

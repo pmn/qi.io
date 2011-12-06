@@ -1,6 +1,6 @@
 # qi: smart notes
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g
-from forms import SigninForm, SignupForm
+from forms import SettingsForm, SigninForm, SignupForm
 import logging
 import argparse
 import json
@@ -110,6 +110,20 @@ def newentry():
         return redirect(url_for('home'))
     else:
         return new_entry
+
+
+@app.route("/settings", methods=['GET', 'POST'])
+def user_settings():
+    """User settings"""
+    form = SettingsForm()
+    return render_template("settings.html",
+                           form=form)
+
+
+@app.route("/topics")
+def topics():
+    """A list of the user's topics"""
+    return render_template("topics.html")
 
 
 @app.route("/signin", methods=['GET', 'POST'])
