@@ -3,11 +3,12 @@
 {% block content %}
 <h3>Sign in: </h3>
 <form method="POST" class="form-stacked">
-  {{ form.csrf }}
-  {{ form.username.label }} {{ form.username }}
-  {{ form.password.label }} {{ form.password }}
-  <p>
+  <fieldset>
+    {{ form.csrf }}
+    {{ form.username.label }} {{ form.username }}
+    {{ form.password.label }} {{ form.password }}
+    <p>&nbsp;</p>
     <input type="submit" value="Sign in" class="btn"/>
-  </p>
+  </fieldset>
 </form>
 {% endblock %}

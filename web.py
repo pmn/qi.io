@@ -115,7 +115,26 @@ def newentry():
 @app.route("/settings", methods=['GET', 'POST'])
 def user_settings():
     """User settings"""
-    form = SettingsForm()
+    user = session['user']
+    form = SettingsForm(email=user.email)
+
+    if request.method == 'POST' and form.validate():
+        user_changed = False
+        if request.form['email'] and request.form['email'] != user.email:
+            user.email = request.form['email']
+            user_changed = True
+            flash("Email address saved!")
+        if request.form['password']:
+            user.set_password(request.form['password'])
+            user_changed = True
+            user.save()
+            flash("Your password was successfully changed!")
+
+        if user_changed:
+            user.save()
+
+        return redirect(url_for('home'))
+
     return render_template("settings.html",
                            form=form)
 
