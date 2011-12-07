@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %} Admin {% endblock %}
+
+{% block sidebar %}
+<h6>Admin</h6>
+<div id="side-menu">
+  <h4>menu</h4>
+  <ul class="unstyled">
+
+  </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<h3>Administration</h3>
+
+<h4>Users:</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Invitation Code</th>
+      <th>Created At</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td>{{ user.username }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.invitation_code }}</td>
+      <td>{{ user.created_at }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

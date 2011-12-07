@@ -98,6 +98,11 @@ class QiDB(object):
         logging.debug('Fetching user: {}'.format(username))
         return self.db.users.find_one({"username": username})
 
+    def get_user_list(self):
+        """Get a list of all the users. For administrative use only."""
+        logging.info('Getting a list of all the users')
+        return self.db.users.find().sort('username', pymongo.ASCENDING)
+
     def save_user(self, user):
         """Save a user record"""
         logging.info('Saving user: {}'.format(repr(user)))

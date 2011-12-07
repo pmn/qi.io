@@ -215,6 +215,15 @@ def sign_out():
     return redirect(url_for('home'))
 
 
+# Admin functionality
+@app.route("/admin")
+def admin():
+    """Administration homepage"""
+    users = db.get_user_list()
+    return render_template("admin.html",
+                           users=users)
+
+
 def init_logging(args):
     log_level = logging.INFO
     log_format = '%(asctime)s %(levelname)s: %(message)s'
