@@ -44,7 +44,7 @@ class User(object):
 
     def entries(self):
         """All the entries belonging to the user"""
-        return db.get_entries_for_user(self.username)
+        return list(db.get_entries_for_user(self.username))
 
     def current_entry(self):
         """Return the most current entry for the user"""
@@ -84,7 +84,7 @@ class Entry(object):
         record = None
         if id and created_by:
             record = db.get_entry(id, created_by)
-        
+
         if record:
             self.id = id
             self.created_by = created_by
@@ -119,16 +119,16 @@ class Entry(object):
     def __repr__(self):
         return "<Entry {} created by {}>".format(self.id, self.created_by)
 
-    
+
     def to_json(self):
         """Return a json representation of the object"""
-        obj = {'id': self.id, 
+        obj = {'id': self.id,
                'created_by': self.created_by,
                'body':self.body,
                'raw_body':self.raw_body,
                'tags':self.tags,
                }
-        
+
         return json.dumps(obj)
 
     def delete(self):
@@ -142,9 +142,9 @@ class Entry(object):
         self.tags = taglist
 
         # Populate a wordlist for searching
-        
+
         # Translate the raw body to the markdownified body
         self.body = markdown.markdown(self.raw_body)
-        
+
         db.save_entry(self)
         return self

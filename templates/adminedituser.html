@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %} Admin - edit user {{ edit_user.username }} {% endblock %}
+
+{% block sidebar %}
+<h6>Admin</h6>
+<div id="side-menu">
+  <h4>menu</h4>
+  <ul class="unstyled">
+
+  </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<h3><a href="{{ url_for('admin') }}">Administration</a> > {{ edit_user.username }}</h3>
+
+<h5>User has {{ edit_user.entries()|length }} entries.</h5>
+<table>
+  <thead>
+    <th>id</th>
+    <th>data</th>
+  </thead>
+  <tbody>
+    {% for entry in edit_user.entries() %}
+    <tr>
+      <td>{{ entry.id }}</td>
+      <td>{{ entry.body|safe }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

@@ -223,6 +223,21 @@ def admin():
     return render_template("admin.html",
                            users=users)
 
+@app.route("/admin/edituser/<username>")
+def admin_edit_user(username):
+    """Administrative screen to edit a user"""
+    admin_user = session['user']
+    if not admin_user.is_admin():
+        logging.info("Invalid admin access attempt from {}".format(admin_user.username))
+        return redirect(url_for('home'))
+
+    edit_user = User(username)
+    assert edit_user
+
+    return render_template("adminedituser.html",
+                           edit_user=edit_user)
+
+
 
 def init_logging(args):
     log_level = logging.INFO
