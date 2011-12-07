@@ -73,3 +73,15 @@ textarea.editbox:focus {
 .entrytags {
     float: right;
 }
+
+.hashtag {
+    color: #AAA;
+}
+
+.taglink {
+    font-size: 1.4em;
+}
+
+.tagcount {
+    color: #AAA;
+}
