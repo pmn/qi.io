@@ -200,6 +200,11 @@ def sign_up():
             # Log the user in
             session['user'] = user
 
+            # Create a new entry for the user so they have something to look at
+            new_entry = Entry(None, user.username)
+            new_entry.raw_body = "Double-click in this area or use the edit button to edit this entry!"
+            new_entry.save()
+
             logging.info("User created: {}".format(username))
 
             flash("Successfully registered. Welcome, {}!".format(username))
