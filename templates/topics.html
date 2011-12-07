@@ -13,5 +13,9 @@
 
 {% block content %}
 <h3>Topics</h3>
-<h4>Currently under construction</h4>
+{% for tag in g.user.tags() %}
+<span class="hashtag">#</span>
+<a href="{{ url_for('show_topic', topic=tag['tag']) }}">{{ tag['tag'] }}</a>
+<span class="tagcount"> ({{ tag['count'] }})</span><br>
+{% endfor %}
 {% endblock %}

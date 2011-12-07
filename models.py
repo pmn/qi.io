@@ -70,6 +70,12 @@ class User(object):
             scratchpad.save()
             return scratchpad
 
+    def tags(self):
+        """Return a list of user's tags"""
+        taglist = db.get_user_tags(self.username)
+        return [{'tag': tag.get('_id'), 'count': int(tag.get('value'))}
+                for tag in taglist.find()]
+
     def is_admin(self):
         """Return true if the user is an admin"""
         return self.username in settings.ADMIN_USERS

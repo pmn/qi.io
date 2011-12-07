@@ -1,4 +1,5 @@
 # db interactions
+from bson.code import Code
 import datetime
 import logging
 import pymongo
@@ -35,6 +36,28 @@ class QiDB(object):
             return current_entry[0]
         else:
             return None
+
+    def get_user_tags(self, username):
+        """Get a listing of tags with counts for this user."""
+        mapfn = Code("function () {"
+                     "  this.tags.forEach(function(z) {"
+                     "    emit(z, 1);"
+                     "  });"
+                     "}")
+
+        reducefn = Code("function (key, values) {"
+                        "  var total = 0;"
+                        "  for (var i = 0; i < values.length; i++) {"
+                        "    total += values[i];"
+                        "}"
+                        "  return total;"
+                        "}")
+
+        return self.db.entries.map_reduce(mapfn,
+                                     reducefn,
+                                     "taglist",
+                                     query={"created_by":username })
+
 
     def get_tagged_entries(self, username, tag):
         """Get entries for user with <username> tagged with <tag>"""
