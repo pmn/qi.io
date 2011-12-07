@@ -58,13 +58,19 @@ class QiDB(object):
                                      "taglist",
                                      query={"created_by":username })
 
-
     def get_tagged_entries(self, username, tag):
         """Get entries for user with <username> tagged with <tag>"""
         logging.debug('Fetching {}\'s entries tagged with {}'.format(username, tag))
         return self.db.entries.find({'created_by': username,
                                      'id': {'$ne': 'scratchpad'},
                                      'tags': tag}).sort('id', pymongo.DESCENDING)
+
+    def search_user_entries(self, username, searchterm):
+        """Get entries for <username> containing <searchterm>"""
+        logging.debug("Searching {}'s entries for term {}".format(username, searchterm))
+        return self.db.entries.find({'created_by': username,
+                                     'id': {'$ne': 'scratchpad'},
+                                     '_keywords': searchterm}).sort('id', pymongo.DESCENDING)
 
     def save_entry(self, entry):
         """Save an entry into the database"""

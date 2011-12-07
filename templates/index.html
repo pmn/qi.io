@@ -21,6 +21,7 @@
 <h3>
   <a href="{{ url_for('home') }}">All entries</a>
   {% if topic %} > #{{ topic }}{% endif %}
+  {% if searchterm %} > Search results for: <i>{{ searchterm }}</i>{% endif %}
 </h3>
 
 <div class="row">
@@ -32,8 +33,8 @@
     <textarea class="editbox span11" id="{{ entry.id }}">{{ entry.raw_body }}</textarea>
     <div class="entrybar">
       <span id="tools_{{ entry.id }}" class="entrytools">
-	<a href="#" onclick="beginEdit('{{ entry.id }}'); return false;" rel="nofollow">Edit Entry</a>
-	<a href="#" onclick="deleteEntry('{{ entry.id }}'); return false;" rel="nofollow">Delete Entry</a>
+	<a href="#" onclick="beginEdit('{{ entry.id }}'); return false;" rel="nofollow"><b>edit</b></a>&nbsp;
+	<a href="#" onclick="deleteEntry('{{ entry.id }}'); return false;" rel="nofollow"><b>delete</b></a>
       </span>
       <span id="tags_{{ entry.id }}" class="entrytags">
 	{% for tag in entry.tags -%}
@@ -44,7 +45,7 @@
       </span>
     </div>
   </div>
-  <br>
+  <p>&nbsp;</p>
   {%- endfor %}
   </div>
 </div>

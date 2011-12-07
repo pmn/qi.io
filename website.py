@@ -92,8 +92,11 @@ def search_redirect():
 @app.route("/search/<term>", methods=['GET', 'POST'])
 def search(term):
     """Search for <term>"""
-    return render_template("searchresults.html",
-                           searchterm=term)
+    user = session.get('user')
+    results = db.search_user_entries(user.username, term)
+    return render_template("index.html",
+                           searchterm=term,
+                           entries=results)
 
 
 @app.route("/newentry", methods=['GET','POST'])

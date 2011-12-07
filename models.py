@@ -6,6 +6,8 @@ import db_api
 import utils
 import settings
 import markdown
+import wordlists
+from itertools import groupby
 
 db = db_api.QiDB()
 
@@ -148,6 +150,9 @@ class Entry(object):
         self.tags = taglist
 
         # Populate a wordlist for searching
+        wordlist = [utils.strip_punctuation(word) for word in set(self.raw_body.split())
+                    if word not in wordlists.STOP_WORDS]
+        self.keywords = wordlist
 
         # Translate the raw body to the markdownified body
         self.body = markdown.markdown(self.raw_body)
