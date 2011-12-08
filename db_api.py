@@ -19,6 +19,12 @@ class QiDB(object):
         return self.db.entries.find_one({'id': entryid,
                                          'created_by': created_by})
 
+    def get_all_entries(self):
+        """Return all entries from the database.
+        This should only be used for administrative functions."""
+        logging.info("Fetching all entries from the database.")
+        return self.db.entries.find()
+
     def get_entries_for_user(self, username):
         """Get all the entries for a specific user"""
         logging.debug('Fetching entries for user: {}'.format(username))
