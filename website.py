@@ -244,6 +244,15 @@ def admin_edit_user(username):
                            edit_user=edit_user)
 
 
+@app.route("/resetpw/<token>", methods=['GET', 'POST'])
+def reset_pw(token):
+    """Look up a user with <token>, and allow the user to reset the password.
+    This is a one-time operation. <token> should expire after the page is viewed.
+    If the user tries to reload or view the page later, they'll have to request
+    another reset."""
+
+    return "pok"
+
 
 def init_logging(args):
     log_level = logging.INFO

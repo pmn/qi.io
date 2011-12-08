@@ -1,6 +1,6 @@
 # db interactions
 from bson.code import Code
-import datetime
+from datetime import datetime
 import logging
 import pymongo
 import settings
@@ -113,7 +113,7 @@ class QiDB(object):
                                                  'created_at': entry.created_at,
                                                  'updated_by': entry.updated_by,
                                                  'updated_at': entry.updated_at,
-                                                 'deleted_at': datetime.datetime.now()}},
+                                                 'deleted_at': datetime.now()}},
                                        upsert=True)
 
         # Delete the old item
@@ -149,3 +149,19 @@ class QiDB(object):
                                        'created_at': user.created_at,
                                        'updated_at': user.updated_at}},
                              upsert=True)
+
+    def add_resetpw_token(self, token, username):
+        """Add a token to denote a user has requested a password reset."""
+        logging.info('Adding a password reset token "{}" for user "{}"'.format(token, username))
+        # There should be a maximum of 1 token active at a time to prevent
+        # old emails from being allowed to reset a password.
+        self.db.reset_tokens.update({'username': username},
+                                    {'$set': {'is_valid': False }},
+                                    multi=True)
+
+        self.db.reset_tokens.insert({'username': username,
+                                     'token': token,
+                                     'created_at': datetime.now(),
+                                     'is_valid': True,
+                                     'claimed_at': None,
+                                     'requester-ip': None})

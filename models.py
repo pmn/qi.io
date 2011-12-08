@@ -6,6 +6,7 @@ import db_api
 import utils
 import settings
 import markdown
+import urlize
 import wordlists
 from itertools import groupby
 
@@ -155,7 +156,10 @@ class Entry(object):
         self.keywords = wordlist
 
         # Translate the raw body to the markdownified body
-        self.body = markdown.markdown(self.raw_body)
+        urlize_ext = urlize.UrlizeExtension()
+        md = markdown.Markdown(extensions=[urlize_ext])
+
+        self.body = md.convert(self.raw_body)
 
         db.save_entry(self)
         return self
