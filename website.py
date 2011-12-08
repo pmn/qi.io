@@ -83,9 +83,7 @@ def show_topic(topic):
 
 @app.route("/search", methods=['POST'])
 def search_redirect():
-
     term = request.form['searchterm']
-    print "in search_redirect"
     return redirect(url_for('search', term=term))
 
 
@@ -93,7 +91,7 @@ def search_redirect():
 def search(term):
     """Search for <term>"""
     user = session.get('user')
-    results = db.search_user_entries(user.username, term)
+    results = list(db.search_user_entries(user.username, term))
     return render_template("index.html",
                            searchterm=term,
                            entries=results)
