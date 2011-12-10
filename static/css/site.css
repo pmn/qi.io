@@ -9,8 +9,6 @@ div.displaybox {
     -webkit-border-radius:3px;
     -moz-border-radius:3px;
     border-radius:3px;
-    white-space:pre;
-    white-space:pre-wrap;
     word-wrap:break-word;
     min-height: 3em;
 }
