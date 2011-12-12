@@ -9,7 +9,7 @@ div.displaybox {
     -webkit-border-radius:3px;
     -moz-border-radius:3px;
     border-radius:3px;
-     word-wrap:break-word;
+    word-wrap:break-word;
     min-height: 3em;
 }
 
@@ -42,6 +42,7 @@ div.notice {
 
 textarea.scratchbox {
     width: 200px;
+    min-height: 50px;
 }
 
 textarea.editbox {

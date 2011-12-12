@@ -152,6 +152,9 @@ class Entry(object):
 
         self.raw_body = self.raw_body.replace("\n#","\n #")
 
+        if self.raw_body.startswith("  "):
+            self.raw_body = self.raw_body.replace("  ", "&nbsp;&nbsp;")
+
         # First update the tags
         taglist = [utils.strip_punctuation(tag) for tag in re.findall(r"#(\S+)", self.raw_body)]
         self.tags = taglist
