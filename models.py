@@ -146,6 +146,12 @@ class Entry(object):
 
     def save(self):
         """Save the entry in the db"""
+        # Insert a space in the beginning of any line that starts with "#"
+        if self.raw_body.startswith("#"):
+            self.raw_body = " " + self.raw_body
+
+        self.raw_body = self.raw_body.replace("\n#","\n #")
+
         # First update the tags
         taglist = [utils.strip_punctuation(tag) for tag in re.findall(r"#(\S+)", self.raw_body)]
         self.tags = taglist
