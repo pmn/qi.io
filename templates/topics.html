@@ -14,8 +14,10 @@
 {% block content %}
 <h3>Topics</h3>
 {% for tag in g.user.tags() %}
+{% if tag['tag']|length > 0 %}
 <span class="hashtag">#</span>
 <a href="{{ url_for('show_topic', topic=tag['tag']) }}" class="taglink">{{ tag['tag'] }}</a>
 <span class="tagcount"> ({{ tag['count'] }})</span><br>
+{% endif %}
 {% endfor %}
 {% endblock %}
