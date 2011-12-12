@@ -163,7 +163,8 @@ class Entry(object):
 
         # Translate the raw body to the markdownified body
         urlize_ext = urlize.UrlizeExtension()
-        md = markdown.Markdown(extensions=[urlize_ext])
+        md = markdown.Markdown(extensions=[urlize_ext,
+                                           'nl2br'])
 
         self.body = md.convert(self.raw_body)
 
