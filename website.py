@@ -243,6 +243,12 @@ def admin_edit_user(username):
     return render_template("adminedituser.html",
                            edit_user=edit_user)
 
+@app.route("/setpass")
+@app.route("/setpass/<token>", methods=['GET', 'POST'])
+def gen_reset_token(token=None):
+    """Generate a user reset token for <username>"""
+    print "token: ", token
+    return "ok"
 
 @app.route("/resetpw/<token>", methods=['GET', 'POST'])
 def reset_pw(token):
