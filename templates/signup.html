@@ -33,14 +33,6 @@
   </ul>
   {% endif %}
 
-  {{ form.invitation_code.label }} {{ form.invitation_code(class="xlarge") }}
-  {% if form.invitation_code.errors %}
-  <ul class="errors">
-    {% for error in form.invitation_code.errors %}
-    <li>{{ error }}</li>
-    {% endfor %}
-  </ul>
-  {% endif %}
   <p>&nbsp;</p>
   <input type="submit" value="Sign up" class="btn" />
   </fieldset>

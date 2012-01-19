@@ -21,7 +21,6 @@
     <t>
       <th>Username</th>
       <th>Email</th>
-      <th>Invitation Code</th>
       <th>Created At</th>
       <th></th>
     </tr>
@@ -31,7 +30,6 @@
     <tr>
       <td><a href="{{ url_for('admin_edit_user', username=user.username) }}">{{ user.username }}</a></td>
       <td>{{ user.email }}</td>
-      <td>{{ user.invitation_code }}</td>
       <td>{{ user.created_at }}</td>
       <td>
 	[<a href="#">delete</a>]

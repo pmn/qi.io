@@ -88,6 +88,7 @@ class QiDB(object):
                                {'$set': {'id': entry.id,
                                          'body': entry.body,
                                          'raw_body': entry.raw_body,
+                                         'todos': entry.todos,
                                          'tags': entry.tags,
                                          '_keywords': entry.keywords,
                                          'created_by': entry.created_by,
@@ -107,6 +108,7 @@ class QiDB(object):
                                        {'$set': {'id': entry.id,
                                                  'body': entry.body,
                                                  'raw_body': entry.raw_body,
+                                                 'todos': entry.todos,
                                                  'tags': entry.tags,
                                                  '_keywords': entry.keywords,
                                                  'created_by': entry.created_by,
@@ -145,7 +147,6 @@ class QiDB(object):
                              {'$set': {'username': user.username,
                                        'password': user.password,
                                        'email': user.email,
-                                       'invitation_code': user.invitation_code,
                                        'created_at': user.created_at,
                                        'updated_at': user.updated_at}},
                              upsert=True)

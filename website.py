@@ -183,7 +183,6 @@ def sign_up():
         # Add the user
         username = request.form['username']
         password = request.form['password']
-        invitation_code = request.form['invitation_code']
 
         if username and password:
             if db.get_user(username):
@@ -194,7 +193,6 @@ def sign_up():
                                        user=None)
 
             user = User(username)
-            user.invitation_code = invitation_code
             user.set_password(password)
 
             user.save()

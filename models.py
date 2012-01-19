@@ -20,7 +20,6 @@ class User(object):
                 self.username = record.get('username')
                 self.password = record.get('password')
                 self.email = record.get('email')
-                self.invitation_code = record.get('invitation_code')
                 self.created_at = record.get('created_at')
                 self.updated_at = record.get('updated_at')
             else:
@@ -100,6 +99,7 @@ class Entry(object):
             self.body = record.get('body')
             self.raw_body = record.get('raw_body')
             self.tags = record.get('tags')
+            self.todos = record.get('todos')
             self.keywords = record.get('_keywords')
             self.created_at = record.get('created_at')
             self.updated_by = record.get('updated_by')
@@ -108,6 +108,7 @@ class Entry(object):
             # Create a new entry
             self.body = ''
             self.raw_body = ''
+            self.todos = []
             self.tags = []
             self.keywords = []
             self.created_by = created_by
@@ -144,6 +145,16 @@ class Entry(object):
         """Delete the entry from the db"""
         db.delete_entry(self)
 
+
+    def update_todos(self):
+        """Update the todos found in the entry text"""
+        for line in self.raw_body.split('\n'):
+            if line.startswith('[]'):
+                print "TODO: ", line
+            elif line.startswith('[x]'):
+                print "TODO: ", line, " (COMPLETED)"
+
+
     def save(self):
         """Save the entry in the db"""
         # Insert a space in the beginning of any line that starts with "#"
@@ -169,7 +180,14 @@ class Entry(object):
         md = markdown.Markdown(extensions=[urlize_ext,
                                            'nl2br'])
 
+        self.update_todos()
+
         self.body = md.convert(self.raw_body)
 
         db.save_entry(self)
         return self
+
+
+class Todo(object):
+    def __init__(self, id=None, entryid=None):
+        True

@@ -13,12 +13,10 @@ div.displaybox {
     min-height: 3em;
 }
 
-
 div.editbox:hover {
     background-color: #F0F0F0;
     cursor: hand;
 }
-
 
 div.container-fluid {
     min-height: 100%;

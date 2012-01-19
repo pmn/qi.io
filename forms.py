@@ -18,7 +18,7 @@ class SignupForm(Form):
     password = PasswordField(validators=[Required(),
                                          EqualTo('confirm', message='Password & confirmation must match')])
     confirm = PasswordField()
-    invitation_code = TextField(validators=[Required()])
+
 
 class ScratchpadForm(Form):
     scratchpad = TextAreaField()
