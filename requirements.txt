@@ -4,7 +4,6 @@ Jinja2==2.6
 Markdown==2.1.0
 WTForms==0.6.3
 Werkzeug==0.8.1
-elementtree==1.2.7-20070827-preview
 gunicorn==0.13.4
 py-bcrypt==0.2
 pymongo==2.0.1
