@@ -107,7 +107,7 @@ def newentry():
 
     logging.info("Creating a new entry with id {} for user {}".format(new_entry.id, user.username))
     if request.method == 'GET':
-        return redirect(url_for('home'))
+        return redirect(url_for('page'))
     else:
         return new_entry
 
@@ -133,7 +133,7 @@ def user_settings():
         if user_changed:
             user.save()
 
-        return redirect(url_for('home'))
+        return redirect(url_for('page'))
 
     return render_template("settings.html",
                            form=form)
@@ -162,7 +162,7 @@ def sign_in():
         if user.authenticate(password):
             session['user'] = user
             logging.info("User signed in: {}".format(username))
-            return redirect(url_for('home'))
+            return redirect(url_for('page'))
         else:
             flash("Incorrect username or password")
             logging.info("Incorrect username or password for user: {}".format(username))
@@ -209,7 +209,7 @@ Create tags by adding a "#" before a word, like this: #mytag
             logging.info("User created: {}".format(username))
 
             flash("Successfully registered. Welcome, {}!".format(username))
-            return redirect(url_for('home'))
+            return redirect(url_for('page'))
     return render_template("signup.html",
                            form=form,
                            user=user)
@@ -218,7 +218,7 @@ Create tags by adding a "#" before a word, like this: #mytag
 @app.route("/signout")
 def sign_out():
     session.pop('user')
-    return redirect(url_for('home'))
+    return redirect(url_for('page'))
 
 
 # Admin functionality
@@ -235,7 +235,7 @@ def admin_edit_user(username):
     admin_user = session['user']
     if not admin_user.is_admin():
         logging.info("Invalid admin access attempt from {}".format(admin_user.username))
-        return redirect(url_for('home'))
+        return redirect(url_for('page'))
 
     edit_user = User(username)
     assert edit_user
