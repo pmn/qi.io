@@ -20,7 +20,7 @@
 
 <h3>
   <a href="{{ url_for('page') }}">All entries ({{ g.user.entry_count() }})</a>
-  {% if topic %} > #{{ topic }}{% endif %}
+  {% if topic %} > #{{ topic }} ({{ entries|length }}){% endif %}
   {% if searchterm %} > Search results for: <i>{{ searchterm }}</i> ({{ entries|length }}) {% endif %}
 </h3>
 
@@ -48,7 +48,7 @@
   <p>&nbsp;</p>
   {%- endfor %}
   <h3>
-  {% if numpages > 0 %}
+  {% if numpages > 0 and not topic %}
   page:
   {% for pagenum in range(numpages) %}
   <a href="{{ url_for('page', pagenum=pagenum) }}">{{ pagenum + 1 }}</a>

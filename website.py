@@ -79,11 +79,12 @@ def delete_entry():
 @app.route("/topic/<topic>")
 def show_topic(topic):
     """Show the topic page"""
-    user = session['user']
-    entries = db.get_tagged_entries(user.username, topic)
+    numpages = int(math.ceil(float(g.user.entry_count()) / float(settings.ITEMS_PER_PAGE)))
+    entries = list(db.get_tagged_entries(g.user.username, topic))
     return render_template("index.html",
                            topic=topic,
-                           entries=entries)
+                           entries=entries,
+                           numpages=numpages)
 
 
 @app.route("/search", methods=['POST'])
