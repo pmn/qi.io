@@ -9,5 +9,6 @@ BCRYPT_WORK_FACTOR = 12
 
 MONGODB_HOST = os.environ.get('MONGOHQ_URL') or "localhost"
 
-ADMIN_USERS = frozenset(['pmn', 'icey',])
+ITEMS_PER_PAGE = 5
 
+ADMIN_USERS = frozenset(['pmn', 'icey',])

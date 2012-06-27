@@ -1,6 +1,7 @@
 # qi: smart notes
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g
 from forms import SettingsForm, SigninForm, SignupForm
+import math
 import logging
 import argparse
 import json
@@ -22,17 +23,21 @@ def before_request():
 
 
 @app.route("/")
-def home():
-    """Display the home page"""
+@app.route("/page/<int:pagenum>")
+def page(pagenum=0):
+    """Display a specific page"""
     today_id = datetime.now().strftime('%Y%m%d')
+    numpages = int(math.ceil(float(g.user.entry_count()) / float(settings.ITEMS_PER_PAGE)))
 
     if g.user:
-        entries = g.user.entries()
+        entries = g.user.entries(page=pagenum)
     else:
         entries = None
 
     return render_template("index.html",
-                           entries=entries)
+                           entries=entries,
+                           numpages=numpages)
+
 
 
 @app.route("/save", methods=['POST'])

@@ -44,9 +44,13 @@ class User(object):
     def set_password(self, password):
         self.password = bcrypt.hashpw(password, bcrypt.gensalt(settings.BCRYPT_WORK_FACTOR))
 
-    def entries(self):
+    def entries(self, page=0):
         """All the entries belonging to the user"""
-        return list(db.get_entries_for_user(self.username))
+        return list(db.get_entries_for_user(self.username, page=page))
+
+    def entry_count(self):
+        """Total number of entries belonging to the user"""
+        return db.get_entry_count_for_user(self.username)
 
     def current_entry(self):
         """Return the most current entry for the user"""

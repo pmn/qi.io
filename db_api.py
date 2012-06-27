@@ -25,12 +25,19 @@ class QiDB(object):
         logging.info("Fetching all entries from the database.")
         return self.db.entries.find()
 
-    def get_entries_for_user(self, username):
+    def get_entries_for_user(self, username, page=0, numperpage=settings.ITEMS_PER_PAGE):
         """Get all the entries for a specific user"""
         logging.debug('Fetching entries for user: {}'.format(username))
         return self.db.entries.find({'created_by': username,
                                      'id': {'$ne': 'scratchpad'}
-                                     }).sort('id', pymongo.DESCENDING)
+                                     }).sort('id',pymongo.DESCENDING
+                                             ).skip((page * numperpage)).limit(numperpage)
+
+    def get_entry_count_for_user(self, username):
+        """Get a count of all the user's records"""
+        logging.debug('Fetching the entry count for user: {}'.format(username))
+        return self.db.entries.find({'created_by': username,
+                                     'id': {'$ne': 'scratchpad'}}).count()
 
     def get_current_entry_for_user(self, username):
         """Get the user's current entry"""
