@@ -20,23 +20,19 @@ db = db_api.QiDB()
 @app.before_request
 def before_request():
     g.user = session.get('user')
-
+    g.numpages = int(math.ceil(float(g.user.entry_count()) / float(settings.ITEMS_PER_PAGE)))
 
 @app.route("/")
 @app.route("/page/<int:pagenum>")
 def page(pagenum=0):
     """Display a specific page"""
     today_id = datetime.now().strftime('%Y%m%d')
-    numpages = int(math.ceil(float(g.user.entry_count()) / float(settings.ITEMS_PER_PAGE)))
-
     if g.user:
         entries = g.user.entries(page=pagenum)
     else:
         entries = None
-
     return render_template("index.html",
-                           entries=entries,
-                           numpages=numpages)
+                           entries=entries)
 
 
 
@@ -79,12 +75,10 @@ def delete_entry():
 @app.route("/topic/<topic>")
 def show_topic(topic):
     """Show the topic page"""
-    numpages = int(math.ceil(float(g.user.entry_count()) / float(settings.ITEMS_PER_PAGE)))
     entries = list(db.get_tagged_entries(g.user.username, topic))
     return render_template("index.html",
                            topic=topic,
-                           entries=entries,
-                           numpages=numpages)
+                           entries=entries)
 
 
 @app.route("/search", methods=['POST'])
@@ -96,8 +90,7 @@ def search_redirect():
 @app.route("/search/<term>", methods=['GET', 'POST'])
 def search(term):
     """Search for <term>"""
-    user = session.get('user')
-    results = list(db.search_user_entries(user.username, term))
+    results = list(db.search_user_entries(g.user.username, term))
     return render_template("index.html",
                            searchterm=term,
                            entries=results)
