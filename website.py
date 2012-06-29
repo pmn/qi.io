@@ -20,7 +20,10 @@ db = db_api.QiDB()
 @app.before_request
 def before_request():
     g.user = session.get('user')
-    g.numpages = int(math.ceil(float(g.user.entry_count()) / float(settings.ITEMS_PER_PAGE)))
+    if g.user:
+        g.numpages = int(math.ceil(float(g.user.entry_count()) / float(settings.ITEMS_PER_PAGE)))
+    else:
+        g.numpages = 0
 
 @app.route("/")
 @app.route("/page/<int:pagenum>")
